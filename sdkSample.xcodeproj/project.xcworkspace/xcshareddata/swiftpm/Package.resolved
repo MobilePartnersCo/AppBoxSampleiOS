@@ -1,0 +1,14 @@
+{
+  "originHash" : "f32b6a36955d945a59924978ea5ed00263022141bbf028a71b0135cdff07ce26",
+  "pins" : [
+    {
+      "identity" : "waveappsuite_public_sdk_ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://bitbucket.org/insystems_moon/waveappsuite_public_sdk_ios",
+      "state" : {
+        "revision" : "c3078b1084f3cbf3a032060ea6c1740a1eb39e87"
+      }
+    }
+  ],
+  "version" : 3
+}
