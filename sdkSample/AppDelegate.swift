@@ -17,11 +17,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // -----------------------------------------------------------------------------------------
-        // AppBox SDK 초기화
+        // AppBox WebConfig 설정
         // -----------------------------------------------------------------------------------------
-        let config = AppBoxWebConfig()
-        config.allowsBackForwardNavigationGestures = true
-        AppBox.shared.initSDK(baseUrl: "https://naver.com",webConfig: config, debugMode: false)
+        let appBoxWebConfig = AppBoxWebConfig()
+        let wkWebViewConfig = WKWebViewConfiguration()
+        if #available(iOS 14.0, *) {
+            wkWebViewConfig.defaultWebpagePreferences.allowsContentJavaScript = true
+        } else {
+            wkWebViewConfig.preferences.javaScriptEnabled = true
+        }
+        appBoxWebConfig.wKWebViewConfiguration = wkWebViewConfig
+        // -----------------------------------------------------------------------------------------
+        
+        // -----------------------------------------------------------------------------------------
+        // AppBox 초기화
+        // -----------------------------------------------------------------------------------------
+        AppBox.shared.initSDK(
+            baseUrl: "https://www.example.com",
+            webConfig: appBoxWebConfig,
+            debugMode: true
+        )
+        // -----------------------------------------------------------------------------------------
+        
+        // -----------------------------------------------------------------------------------------
+        // AppBox 푸시 토큰 설정
+        // -----------------------------------------------------------------------------------------
+        AppBox.shared.setPushToken("푸시 토큰 값")
         // -----------------------------------------------------------------------------------------
         
         // -----------------------------------------------------------------------------------------
@@ -34,24 +55,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // -----------------------------------------------------------------------------------------
         // AppBox 인트로 설정
         // -----------------------------------------------------------------------------------------
-        if let introItem1 = AppBoxIntro(imageUrl: "이미지 url") {
+        if let appBoxIntroItem1 = AppBoxIntro(imageUrl: "https://www.example.com/example1.png"),
+           let appBoxIntroItem2 = AppBoxIntro(imageUrl: "https://www.example.com/example2.png") {
             let items = [
-                introItem1
+                appBoxIntroItem1,
+                appBoxIntroItem2
             ]
             AppBox.shared.setIntro(items)
         }
         // -----------------------------------------------------------------------------------------
         
-        // -----------------------------------------------------------------------------------------
-        // AppBox 푸시 토큰 설정
-        // -----------------------------------------------------------------------------------------
-        AppBox.shared.setPushToken("푸시토큰")
-        // -----------------------------------------------------------------------------------------
         
         // -----------------------------------------------------------------------------------------
-        // AppBox pullDown Refresh 설정
+        // AppBox 당겨서 새로고침 설정
         // -----------------------------------------------------------------------------------------
-        AppBox.shared.setPullDownRefresh(used: true)
+        AppBox.shared.setPullDownRefresh(
+            used: true
+        )
         // -----------------------------------------------------------------------------------------
         
         

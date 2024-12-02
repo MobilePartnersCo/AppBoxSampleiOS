@@ -17,11 +17,19 @@ class ViewController: UIViewController {
 
     @IBAction func start(_ sender: Any) {
         // -----------------------------------------------------------------------------------------
-        // AppBox SDK 시작
+        // AppBox 실행
         // -----------------------------------------------------------------------------------------
         AppBox.shared.start(from: self) { isSuccess, error in
-            if let error = error {
-                print("error : \(error.localizedDescription)")
+            if isSuccess {
+                // 실행 성공 처리
+                print("AppBox:: SDK 실행 성공")
+            } else {
+                // 실행 실패 처리
+                if let error = error {
+                    print("error : \(error.localizedDescription)")
+                } else {
+                    print("error : unkown Error")
+                }
             }
         }
         // -----------------------------------------------------------------------------------------
