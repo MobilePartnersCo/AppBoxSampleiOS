@@ -1,4 +1,4 @@
-<img src="https://www.appboxapp.com/storage/mobpa/image/banner/Lotties/AppBox_Motion_fin_01.gif">
+<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/AppBox_Motion.gif">
 
 # AppBox SDK
 [![Swift Package Manager](https://img.shields.io/badge/SPM-Compatible-green.svg)](https://swift.org/package-manager/)
