@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B84FA692CF9561100164732 /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B84FA682CF9561100164732 /* AppBoxSDK */; };
 		9BA76DA92CF593BD00FE2892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DA82CF593BD00FE2892 /* AppDelegate.swift */; };
 		9BA76DAB2CF593BD00FE2892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DAA2CF593BD00FE2892 /* SceneDelegate.swift */; };
 		9BA76DAD2CF593BD00FE2892 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DAC2CF593BD00FE2892 /* ViewController.swift */; };
 		9BA76DB02CF593BD00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DAF2CF593BD00FE2892 /* Base */; };
 		9BA76DB22CF593BE00FE2892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB12CF593BE00FE2892 /* Assets.xcassets */; };
 		9BA76DB52CF593BE00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB42CF593BE00FE2892 /* Base */; };
-		9BA76DBE2CF5956700FE2892 /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BA76DBD2CF5956700FE2892 /* AppBoxSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BA76DBE2CF5956700FE2892 /* AppBoxSDK in Frameworks */,
+				9B84FA692CF9561100164732 /* AppBoxSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +88,7 @@
 			);
 			name = sdkSample;
 			packageProductDependencies = (
-				9BA76DBD2CF5956700FE2892 /* AppBoxSDK */,
+				9B84FA682CF9561100164732 /* AppBoxSDK */,
 			);
 			productName = sdkSample;
 			productReference = 9BA76DA52CF593BD00FE2892 /* sdkSample.app */;
@@ -120,7 +120,7 @@
 			);
 			mainGroup = 9BA76D9C2CF593BD00FE2892;
 			packageReferences = (
-				9BA76DBC2CF5956700FE2892 /* XCRemoteSwiftPackageReference "waveappsuite_public_sdk_ios" */,
+				9B84FA672CF9561100164732 /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
 			);
 			productRefGroup = 9BA76DA62CF593BD00FE2892 /* Products */;
 			projectDirPath = "";
@@ -393,20 +393,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9BA76DBC2CF5956700FE2892 /* XCRemoteSwiftPackageReference "waveappsuite_public_sdk_ios" */ = {
+		9B84FA672CF9561100164732 /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://bitbucket.org/insystems_moon/waveappsuite_public_sdk_ios";
+			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = revision;
-				revision = c3078b1084f3cbf3a032060ea6c1740a1eb39e87;
+				revision = f734447a66ffc83171d464bbc6fd5e8948cf3ae1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9BA76DBD2CF5956700FE2892 /* AppBoxSDK */ = {
+		9B84FA682CF9561100164732 /* AppBoxSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BA76DBC2CF5956700FE2892 /* XCRemoteSwiftPackageReference "waveappsuite_public_sdk_ios" */;
+			package = 9B84FA672CF9561100164732 /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxSDK;
 		};
 /* End XCSwiftPackageProductDependency section */

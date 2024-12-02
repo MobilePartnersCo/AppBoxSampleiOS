@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // -----------------------------------------------------------------------------------------
         let config = AppBoxWebConfig()
         config.allowsBackForwardNavigationGestures = true
-        AppBox.shared.initSDK(baseUrl: "https://naver.com",webConfig: config, debugMode: true)
+        AppBox.shared.initSDK(baseUrl: "https://naver.com",webConfig: config, debugMode: false)
         // -----------------------------------------------------------------------------------------
         
         // -----------------------------------------------------------------------------------------

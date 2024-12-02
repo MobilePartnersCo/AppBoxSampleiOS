@@ -1,12 +1,13 @@
 {
-  "originHash" : "f32b6a36955d945a59924978ea5ed00263022141bbf028a71b0135cdff07ce26",
+  "originHash" : "f86ffd81e17628d3ec7c10f605ef1067952559276c6a19e2590a96cd8a75ec15",
   "pins" : [
     {
-      "identity" : "waveappsuite_public_sdk_ios",
+      "identity" : "appboxsdkframwork",
       "kind" : "remoteSourceControl",
-      "location" : "https://bitbucket.org/insystems_moon/waveappsuite_public_sdk_ios",
+      "location" : "https://github.com/MobilePartnersCo/AppBoxSDKFramwork",
       "state" : {
-        "revision" : "c3078b1084f3cbf3a032060ea6c1740a1eb39e87"
+        "branch" : "v1.0.0",
+        "revision" : "f734447a66ffc83171d464bbc6fd5e8948cf3ae1"
       }
     }
   ],
