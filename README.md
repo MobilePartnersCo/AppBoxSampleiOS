@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/AppBox_Motion.gif">
+![AppBox_Gif](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/AppBox_Motion.gif)
 
 # AppBox SDK
 [![Swift Package Manager](https://img.shields.io/badge/SPM-Compatible-green.svg)](https://swift.org/package-manager/)
@@ -56,19 +56,19 @@
 
 AppBoxSDK는 [Swift Package Manager](https://swift.org/package-manager/)를 통해 배포됩니다. SPM 설치를 위해 다음 단계를 따라주세요:
 
-1. Xcode에서 **①[Project Target] > ②[Package Dependencies] > ③[Packages +]를 눌러 패키지 추가 화면을 엽니다.** 
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm1.png">
+1. Xcode에서 **①[Project Target] > ②[Package Dependencies] > ③[Packages +]를 눌러 패키지 추가 화면을 엽니다.**
+![SPM_Step1_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm1.png)
 
-2. 다음 SPM URL 복사합니다:
+3. 다음 SPM URL 복사합니다:
    ```console
    https://github.com/MobilePartnersCo/AppBoxSDKFramwork
    ```
 
-3. **④[검색창] SPM URL 검색 > ⑤[Dependency Rule] `Up to Next Major Version 최신 버전` 입력 > ⑥[Add Package]를 눌러 패키지 추가합니다.** 
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm2.png">
+4. **④[검색창] SPM URL 검색 > ⑤[Dependency Rule] `Up to Next Major Version 최신 버전` 입력 > ⑥[Add Package]를 눌러 패키지 추가합니다.** 
+![SPM_Step3_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm2.png)
 
-4. **설정 완료**
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm3.png">
+5. **설정 완료**
+![SPM_Step4_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/spm3.png)
 
 ---
 
@@ -101,13 +101,13 @@ SDK를 사용하려면 `Info.plist` 파일에 아래와 같은 항목을 추가�
 걸음수를 사용하려면 `Signing & Capabilities`에 HealthKit을 추가해야합니다. 다음 단계를 따라주세요:
 
 1. Xcode에서 **①[Targets Target] > ②[Signing & Capabilities] > ③[+ Capability]를 Capability 추가 화면을 엽니다.**
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing1.png">
+![Signing_Step1_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing1.png)
 
 2. Xcode에서 **④[검색창]에 `HealthKit` 입력  > ⑤더블클릭하여 적용합니다.**
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing2.png">
+![Signing_Step2_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing2.png)
 
 3. **설정 완료**
-<img src="https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing3.png">
+![Signing_Step3_Image](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/signing3.png)
 
 ---
 
