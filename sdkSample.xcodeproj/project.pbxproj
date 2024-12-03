@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9B84FA692CF9561100164732 /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B84FA682CF9561100164732 /* AppBoxSDK */; };
+		9B9A0B832CFED64D0047B31F /* ObjcViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9A0B822CFED64D0047B31F /* ObjcViewController.m */; };
 		9BA76DA92CF593BD00FE2892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DA82CF593BD00FE2892 /* AppDelegate.swift */; };
 		9BA76DAB2CF593BD00FE2892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DAA2CF593BD00FE2892 /* SceneDelegate.swift */; };
 		9BA76DAD2CF593BD00FE2892 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DAC2CF593BD00FE2892 /* ViewController.swift */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B9A0B812CFED64D0047B31F /* ObjcViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcViewController.h; sourceTree = "<group>"; };
+		9B9A0B822CFED64D0047B31F /* ObjcViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcViewController.m; sourceTree = "<group>"; };
 		9BA76DA52CF593BD00FE2892 /* sdkSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdkSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BA76DA82CF593BD00FE2892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9BA76DAA2CF593BD00FE2892 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 				9BA76DA82CF593BD00FE2892 /* AppDelegate.swift */,
 				9BA76DAA2CF593BD00FE2892 /* SceneDelegate.swift */,
 				9BA76DAC2CF593BD00FE2892 /* ViewController.swift */,
+				9B9A0B812CFED64D0047B31F /* ObjcViewController.h */,
+				9B9A0B822CFED64D0047B31F /* ObjcViewController.m */,
 				9BA76DAE2CF593BD00FE2892 /* Main.storyboard */,
 				9BA76DB12CF593BE00FE2892 /* Assets.xcassets */,
 				9BA76DB32CF593BE00FE2892 /* LaunchScreen.storyboard */,
@@ -149,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B9A0B832CFED64D0047B31F /* ObjcViewController.m in Sources */,
 				9BA76DAD2CF593BD00FE2892 /* ViewController.swift in Sources */,
 				9BA76DA92CF593BD00FE2892 /* AppDelegate.swift in Sources */,
 				9BA76DAB2CF593BD00FE2892 /* SceneDelegate.swift in Sources */,
@@ -313,7 +319,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -350,7 +356,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -398,7 +404,7 @@
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = revision;
-				revision = f734447a66ffc83171d464bbc6fd5e8948cf3ae1;
+				revision = cd65276e15d4da53c54257ae4075a64fa9cac616;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
