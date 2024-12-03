@@ -127,9 +127,7 @@ import WebKit
 
 ```swift
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-// -----------------------------------------------------------------------------------------
 // AppBox WebConfig 설정
-// -----------------------------------------------------------------------------------------
 let appBoxWebConfig = AppBoxWebConfig()
 let wkWebViewConfig = WKWebViewConfiguration()
 if #available(iOS 14.0, *) {
@@ -138,17 +136,14 @@ if #available(iOS 14.0, *) {
    wkWebViewConfig.preferences.javaScriptEnabled = true
 }
 appBoxWebConfig.wKWebViewConfiguration = wkWebViewConfig
-// -----------------------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------------------
 // AppBox 초기화
-// -----------------------------------------------------------------------------------------
 AppBox.shared.initSDK(
    baseUrl: "https://www.example.com",
    webConfig: appBoxWebConfig,
    debugMode: true
 )
-// -----------------------------------------------------------------------------------------
+
 return true
 }
 ```
@@ -162,9 +157,8 @@ return true
 #### 예제 코드:
 
 ```swift
-// -----------------------------------------------------------------------------------------
+
 // AppBox 실행
-// -----------------------------------------------------------------------------------------
 AppBox.shared.start(from: self) { isSuccess, error in
    if isSuccess {
        // 실행 성공 처리
@@ -178,7 +172,6 @@ AppBox.shared.start(from: self) { isSuccess, error in
        }
    }
 }
-// -----------------------------------------------------------------------------------------
 ```
 
 ---
@@ -194,11 +187,8 @@ APNS에서 발급 받은 푸시 토큰 또는 FCM 푸시 토큰을 저장합니�
 #### 예제 코드:
 
 ```swift
-// -----------------------------------------------------------------------------------------
 // AppBox 푸시 토큰 설정
-// -----------------------------------------------------------------------------------------
 AppBox.shared.setPushToken("푸시 토큰 값")
-// -----------------------------------------------------------------------------------------
 ```
 
 - #### **로컬 푸시 설정**
@@ -209,21 +199,16 @@ AppBox.shared.setPushToken("푸시 토큰 값")
 
 ```swift
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-// -----------------------------------------------------------------------------------------
 // AppBox 로컬 푸시 설정
-// -----------------------------------------------------------------------------------------
 let center = UNUserNotificationCenter.current()
 center.delegate = self
-// -----------------------------------------------------------------------------------------
 
 return true
 }
 ```
 
 ```swift
-// -----------------------------------------------------------------------------------------
 // AppBox 로컬 푸시 설정
-// -----------------------------------------------------------------------------------------
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .sound])
@@ -238,9 +223,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 #### 예제 코드:
 
 ```swift
-// -----------------------------------------------------------------------------------------
 // AppBox 인트로 설정
-// -----------------------------------------------------------------------------------------
 if let appBoxIntroItem1 = AppBoxIntro(imageUrl: "https://www.example.com/example1.png"),
   let appBoxIntroItem2 = AppBoxIntro(imageUrl: "https://www.example.com/example2.png") {
    let items = [
@@ -249,7 +232,6 @@ if let appBoxIntroItem1 = AppBoxIntro(imageUrl: "https://www.example.com/example
    ]
    AppBox.shared.setIntro(items)
 }
-// -----------------------------------------------------------------------------------------
 ```
 
 - #### **당겨서 새로고침 설정**
@@ -261,13 +243,10 @@ if let appBoxIntroItem1 = AppBoxIntro(imageUrl: "https://www.example.com/example
 #### 예제 코드:
 
 ```swift
-// -----------------------------------------------------------------------------------------
 // AppBox 당겨서 새로고침 설정
-// -----------------------------------------------------------------------------------------
 AppBox.shared.setPullDownRefresh(
    used: true
 )
-// -----------------------------------------------------------------------------------------
 ```
 
 ---
