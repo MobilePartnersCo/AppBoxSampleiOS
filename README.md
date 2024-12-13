@@ -1,6 +1,6 @@
 ![AppBox_JPG](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSampleiOS/main/resource/image/AppboxVisual.jpg)
 
-# AppBox SDK
+# AppBox SDK 사용 샘플소스
 [![Swift Package Manager](https://img.shields.io/badge/SPM-Compatible-green.svg)](https://swift.org/package-manager/)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/MobilePartnersCo/AppBoxSampleiOS)
 
