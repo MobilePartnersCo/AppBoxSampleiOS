@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 @import AppBoxSDK;
+@import AppBoxPushSDK;
 #import <WebKit/WebKit.h>
 
 

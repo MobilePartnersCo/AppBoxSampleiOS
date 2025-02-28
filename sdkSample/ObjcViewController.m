@@ -15,9 +15,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // -----------------------------------------------------------------------------------------
+    // AppBoxPushSDK 초기화 (AppDelegate 설정 필수)
+    // -----------------------------------------------------------------------------------------
+    [[AppBoxPush shared] appBoxPushInitWithLauchOptions:nil projectId:@"프로젝트 아이디"];
+    // -----------------------------------------------------------------------------------------
     
     // -----------------------------------------------------------------------------------------
-    // AppBox WebConfig 설정
+    // AppBox WebConfig 설정 (AppDelegate 설정 필수)
     // -----------------------------------------------------------------------------------------
     AppBoxWebConfig *appBoxWebConfig = [[AppBoxWebConfig alloc] init];
     WKWebViewConfiguration *wkWebViewConfig = [[WKWebViewConfiguration alloc] init];
@@ -33,7 +38,7 @@
     // -----------------------------------------------------------------------------------------
     
     // -----------------------------------------------------------------------------------------
-    // AppBox 초기화
+    // AppBox 초기화 (AppDelegate 설정 필수)
     // -----------------------------------------------------------------------------------------
     [[AppBox shared]
      initSDKWithBaseUrl:@"https://www.example.com"
@@ -43,19 +48,24 @@
     // -----------------------------------------------------------------------------------------
     
     // -----------------------------------------------------------------------------------------
-    // AppBox 푸시 토큰 설정
+    // AppBox BaseUrl 설정
     // -----------------------------------------------------------------------------------------
-    [[AppBox shared] setPushToken:@"푸시 토큰 값"];
+    [[AppBox shared] setBaseUrlWithBaseUrl:@"https://www.example.com"];
+    // -----------------------------------------------------------------------------------------
+    
+    // -----------------------------------------------------------------------------------------
+    // AppBox Debug 설정
+    // -----------------------------------------------------------------------------------------
+    [[AppBox shared] setDebugWithDebugMode:true];
     // -----------------------------------------------------------------------------------------
     
     // -----------------------------------------------------------------------------------------
     // AppBox 인트로 설정
     // -----------------------------------------------------------------------------------------
-    AppBoxIntro *appBoxIntroItem1 = [[AppBoxIntro alloc] initWithImageUrl:@"https://www.example.com/example1.png"];
-    AppBoxIntro *appBoxIntroItem2 = [[AppBoxIntro alloc] initWithImageUrl:@"https://www.example.com/example2.png"];
-    
-    NSArray *items = [[NSArray alloc] initWithObjects:appBoxIntroItem1, appBoxIntroItem2, nil];
-    [[AppBox shared] setIntro:items];
+    AppBoxIntroItems *appBoxIntroItem1 = [[AppBoxIntroItems alloc] initWithImageUrl:@"https://example.com/image.jpg"];
+    NSArray *items = [[NSArray alloc] initWithObjects:appBoxIntroItem1, nil];
+    AppBoxIntro *intro = [[AppBoxIntro alloc] initWithItem:items];
+    [[AppBox shared] setIntro:intro];
     // -----------------------------------------------------------------------------------------
     
     // -----------------------------------------------------------------------------------------

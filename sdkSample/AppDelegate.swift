@@ -7,14 +7,18 @@
 
 import UIKit
 import AppBoxSDK
+import AppBoxPushSDK
 import WebKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // -----------------------------------------------------------------------------------------
+        // AppBoxPushSDK 초기화
+        // -----------------------------------------------------------------------------------------
+        AppBoxPush.shared.appBoxPushInitWithLauchOptions(launchOptions, projectId: "프로젝트 아이디")
 
         // -----------------------------------------------------------------------------------------
         // AppBox WebConfig 설정
@@ -39,29 +43,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         // -----------------------------------------------------------------------------------------
         
-        // -----------------------------------------------------------------------------------------
-        // AppBox 푸시 토큰 설정
-        // -----------------------------------------------------------------------------------------
-        AppBox.shared.setPushToken("푸시 토큰 값")
-        // -----------------------------------------------------------------------------------------
-        
-        // -----------------------------------------------------------------------------------------
-        // AppBox 로컬 푸시 설정
-        // -----------------------------------------------------------------------------------------
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        // -----------------------------------------------------------------------------------------
         
         // -----------------------------------------------------------------------------------------
         // AppBox 인트로 설정
         // -----------------------------------------------------------------------------------------
-        if let appBoxIntroItem1 = AppBoxIntro(imageUrl: "https://www.example.com/example1.png"),
-           let appBoxIntroItem2 = AppBoxIntro(imageUrl: "https://www.example.com/example2.png") {
-            let items = [
-                appBoxIntroItem1,
-                appBoxIntroItem2
-            ]
-            AppBox.shared.setIntro(items)
+        if let introItem1 = AppBoxIntroItems(imageUrl: "https://example.com/image.jpg") {
+           let items = [introItem1]
+           let intro = AppBoxIntro(indicatorDefColor: "#a7abab", indicatorSelColor: "#000000", fontColor: "#000000", item: items)
+        } else {
+           print("Failed to initialize AppBoxIntro with empty URL.")
         }
         // -----------------------------------------------------------------------------------------
         
@@ -83,15 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-    }
-}
-
-// -----------------------------------------------------------------------------------------
-// AppBox 로컬 푸시 설정
-// -----------------------------------------------------------------------------------------
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound])
     }
 }
 
