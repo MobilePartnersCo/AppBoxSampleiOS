@@ -14,9 +14,9 @@
 		9BA76DB02CF593BD00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DAF2CF593BD00FE2892 /* Base */; };
 		9BA76DB22CF593BE00FE2892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB12CF593BE00FE2892 /* Assets.xcassets */; };
 		9BA76DB52CF593BE00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB42CF593BE00FE2892 /* Base */; };
-		9BECA3A62D713FAC006E133B /* AppBoxHealthSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3A52D713FAC006E133B /* AppBoxHealthSDK */; };
-		9BECA3A82D713FAC006E133B /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3A72D713FAC006E133B /* AppBoxPushSDK */; };
-		9BECA3AA2D713FAC006E133B /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3A92D713FAC006E133B /* AppBoxSDK */; };
+		9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */; };
+		9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B12D717A84006E133B /* AppBoxPushSDK */; };
+		9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B32D717A84006E133B /* AppBoxSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,9 +38,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BECA3AA2D713FAC006E133B /* AppBoxSDK in Frameworks */,
-				9BECA3A62D713FAC006E133B /* AppBoxHealthSDK in Frameworks */,
-				9BECA3A82D713FAC006E133B /* AppBoxPushSDK in Frameworks */,
+				9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */,
+				9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */,
+				9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,9 +97,9 @@
 			);
 			name = sdkSample;
 			packageProductDependencies = (
-				9BECA3A52D713FAC006E133B /* AppBoxHealthSDK */,
-				9BECA3A72D713FAC006E133B /* AppBoxPushSDK */,
-				9BECA3A92D713FAC006E133B /* AppBoxSDK */,
+				9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */,
+				9BECA3B12D717A84006E133B /* AppBoxPushSDK */,
+				9BECA3B32D717A84006E133B /* AppBoxSDK */,
 			);
 			productName = sdkSample;
 			productReference = 9BA76DA52CF593BD00FE2892 /* sdkSample.app */;
@@ -131,7 +131,7 @@
 			);
 			mainGroup = 9BA76D9C2CF593BD00FE2892;
 			packageReferences = (
-				9BECA3A42D713FAC006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
+				9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
 			);
 			productRefGroup = 9BA76DA62CF593BD00FE2892 /* Products */;
 			projectDirPath = "";
@@ -405,30 +405,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9BECA3A42D713FAC006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
+		9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
-				kind = revision;
-				revision = cb5107f7c8aa74e527205314150000941258dd36;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.24;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9BECA3A52D713FAC006E133B /* AppBoxHealthSDK */ = {
+		9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3A42D713FAC006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxHealthSDK;
 		};
-		9BECA3A72D713FAC006E133B /* AppBoxPushSDK */ = {
+		9BECA3B12D717A84006E133B /* AppBoxPushSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3A42D713FAC006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxPushSDK;
 		};
-		9BECA3A92D713FAC006E133B /* AppBoxSDK */ = {
+		9BECA3B32D717A84006E133B /* AppBoxSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3A42D713FAC006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
