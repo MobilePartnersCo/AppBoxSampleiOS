@@ -14,11 +14,6 @@ import WebKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // -----------------------------------------------------------------------------------------
-        // AppBoxPushSDK 초기화
-        // -----------------------------------------------------------------------------------------
-        AppBoxPush.shared.appBoxPushInitWithLauchOptions(launchOptions, projectId: "프로젝트 아이디")
 
         // -----------------------------------------------------------------------------------------
         // AppBox WebConfig 설정
@@ -38,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // -----------------------------------------------------------------------------------------
         AppBox.shared.initSDK(
             baseUrl: "https://www.example.com",
+            projectId: "프로젝트 아이디",
             webConfig: appBoxWebConfig,
             debugMode: true
         )
@@ -73,6 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // -----------------------------------------------------------------------------------------
+        // AppBoxPushSDK 초기화
+        // -----------------------------------------------------------------------------------------
+        AppBoxPush.shared.appBoxPushApnsToken(apnsToken: deviceToken)
+        // -----------------------------------------------------------------------------------------
     }
 }
 
