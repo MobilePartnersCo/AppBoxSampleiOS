@@ -14,6 +14,12 @@ import WebKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // -----------------------------------------------------------------------------------------
+        // 푸시를 받기위한 설정
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        // -----------------------------------------------------------------------------------------
 
         // -----------------------------------------------------------------------------------------
         // AppBox WebConfig 설정
@@ -76,6 +82,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // AppBoxPushSDK 초기화
         // -----------------------------------------------------------------------------------------
         AppBoxPush.shared.appBoxPushApnsToken(apnsToken: deviceToken)
+        // -----------------------------------------------------------------------------------------
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    // 알림이 클릭이 되었을 때
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        // -----------------------------------------------------------------------------------------
+        // AppBox 푸시 이동 처리
+        // -----------------------------------------------------------------------------------------
+        AppBox.shared.movePush(response: response)
+        // -----------------------------------------------------------------------------------------
+        
+        completionHandler()
+    }
+    
+    
+    // foreground일 때, 알림이 발생
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        // -----------------------------------------------------------------------------------------
+        // 푸시에대한 설정
+        // -----------------------------------------------------------------------------------------
+        completionHandler([.badge, .alert, .sound])
         // -----------------------------------------------------------------------------------------
     }
 }
