@@ -109,5 +109,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler([.badge, .alert, .sound])
         // -----------------------------------------------------------------------------------------
     }
+
+    // 인앱 메시지 사용시
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        AppBox.shared.handledidReceiveRemoteNotification(userInfo: userInfo)
+        completionHandler(.newData)
+    }
 }
 
