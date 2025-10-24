@@ -583,7 +583,7 @@
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.34;
+				minimumVersion = 1.0.36;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
