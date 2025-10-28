@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MobilePartnersCo/AppBoxSDKFramwork",
       "state" : {
-        "revision" : "c76a88bcb3135dec0d2f714ff74144950bc3b3a8",
-        "version" : "1.0.36"
+        "revision" : "73443c7f3aee959d1ea179e90350141e2043868e",
+        "version" : "1.0.38"
       }
     },
     {
