@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B1433E42F2752AE0074DB96 /* AppBoxSnsLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */; };
 		9B6E334E2DF8292B00D4D264 /* appBoxNotiServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B6E33472DF8292B00D4D264 /* appBoxNotiServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9B6E33572DF8304600D4D264 /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B6E33562DF8304600D4D264 /* AppBoxPushSDK */; };
 		9B9A0B832CFED64D0047B31F /* ObjcViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9A0B822CFED64D0047B31F /* ObjcViewController.m */; };
@@ -89,6 +90,7 @@
 			files = (
 				9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */,
 				9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */,
+				9B1433E42F2752AE0074DB96 /* AppBoxSnsLoginSDK in Frameworks */,
 				9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -184,6 +186,7 @@
 				9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */,
 				9BECA3B12D717A84006E133B /* AppBoxPushSDK */,
 				9BECA3B32D717A84006E133B /* AppBoxSDK */,
+				9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */,
 			);
 			productName = sdkSample;
 			productReference = 9BA76DA52CF593BD00FE2892 /* sdkSample.app */;
@@ -582,13 +585,17 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.41;
+				kind = exactVersion;
+				version = 1.0.44;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppBoxSnsLoginSDK;
+		};
 		9B6E33562DF8304600D4D264 /* AppBoxPushSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
