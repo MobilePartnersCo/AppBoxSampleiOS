@@ -17,6 +17,7 @@
 		9BA76DB02CF593BD00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DAF2CF593BD00FE2892 /* Base */; };
 		9BA76DB22CF593BE00FE2892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB12CF593BE00FE2892 /* Assets.xcassets */; };
 		9BA76DB52CF593BE00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB42CF593BE00FE2892 /* Base */; };
+		9BAFD6712FA2EB45007F3D6E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAFD6702FA2EB45007F3D6E /* Lottie */; };
 		9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */; };
 		9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B12D717A84006E133B /* AppBoxPushSDK */; };
 		9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B32D717A84006E133B /* AppBoxSDK */; };
@@ -88,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BAFD6712FA2EB45007F3D6E /* Lottie in Frameworks */,
 				9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */,
 				9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */,
 				9B1433E42F2752AE0074DB96 /* AppBoxSnsLoginSDK in Frameworks */,
@@ -187,6 +189,7 @@
 				9BECA3B12D717A84006E133B /* AppBoxPushSDK */,
 				9BECA3B32D717A84006E133B /* AppBoxSDK */,
 				9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */,
+				9BAFD6702FA2EB45007F3D6E /* Lottie */,
 			);
 			productName = sdkSample;
 			productReference = 9BA76DA52CF593BD00FE2892 /* sdkSample.app */;
@@ -222,6 +225,7 @@
 			mainGroup = 9BA76D9C2CF593BD00FE2892;
 			packageReferences = (
 				9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
+				9BAFD66F2FA2EB45007F3D6E /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = 9BA76DA62CF593BD00FE2892 /* Products */;
 			projectDirPath = "";
@@ -581,12 +585,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9BAFD66F2FA2EB45007F3D6E /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.6.0;
+			};
+		};
 		9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = exactVersion;
-				version = 1.2.0;
+				version = 1.2.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -600,6 +612,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxPushSDK;
+		};
+		9BAFD6702FA2EB45007F3D6E /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BAFD66F2FA2EB45007F3D6E /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 		9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */ = {
 			isa = XCSwiftPackageProductDependency;

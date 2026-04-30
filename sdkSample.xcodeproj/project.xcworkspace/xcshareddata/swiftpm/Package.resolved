@@ -1,5 +1,5 @@
 {
-  "originHash" : "f86ffd81e17628d3ec7c10f605ef1067952559276c6a19e2590a96cd8a75ec15",
+  "originHash" : "f98c441a1c08ef8710261e22075fd8d69e5484d6ea8f380177effc3657dd874c",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MobilePartnersCo/AppBoxSDKFramwork",
       "state" : {
-        "revision" : "2a911d90284a717f454b9086afa01eb300c903b4",
-        "version" : "1.2.0"
+        "revision" : "a6296ac02e4c5ad972f7acbc74b487b8f30c631c",
+        "version" : "1.2.6"
       }
     },
     {
@@ -143,6 +143,15 @@
       "state" : {
         "revision" : "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
         "version" : "1.22.5"
+      }
+    },
+    {
+      "identity" : "lottie-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
+      "state" : {
+        "revision" : "69faaefa7721fba9e434a52c16adf4329c9084db",
+        "version" : "4.6.0"
       }
     },
     {
