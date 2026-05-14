@@ -12,6 +12,10 @@ import AppBoxSDK
 import AppBoxPushSDK
 import AppBoxSnsLoginSDK
 
+// 주석 prefix 기준:
+// [공통] 앱 lifecycle, push callback, URL callback처럼 여러 통합 방식에서 확인할 처리입니다.
+// [AppBox 기본 WebView] AppBoxSDK가 WKWebView를 생성/관리하는 기본 샘플 흐름입니다.
+// [선택: AppsFlyer], [선택: SNS 로그인] 해당 기능을 쓰는 앱만 적용합니다.
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -21,15 +25,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
 
         // -----------------------------------------------------------------------------------------
-        // 푸시를 받기 위한 설정
+        // [공통] 푸시를 받기 위한 설정
+        // 앱이 foreground에 있을 때도 푸시 표시/클릭 처리를 받기 위해 delegate를 지정합니다.
         // -----------------------------------------------------------------------------------------
         UNUserNotificationCenter.current().delegate = self
 
         // -----------------------------------------------------------------------------------------
-        // AppBox WebConfig 설정
+        // [선택: SNS 로그인] Firebase Client ID 설정
+        // Google 로그인 등 Firebase Client ID가 필요한 기능은 AppBox 초기화 전에 호출합니다.
+        // -----------------------------------------------------------------------------------------
+        AppBoxPush.shared.initializeFirebaseClientID(
+            clientID: "YOUR_FIREBASE_CLIENTID"
+        )
+
+        // -----------------------------------------------------------------------------------------
+        // [AppBox 기본 WebView] AppBox WebConfig 설정
         // -----------------------------------------------------------------------------------------
         let appBoxWebConfig = AppBoxWebConfig()
         let wkWebViewConfig = WKWebViewConfiguration()
+        // [AppBox 기본 WebView] 웹에서 사용하는 JavaScript bridge가 동작할 수 있도록 JS 실행을 허용합니다.
         if #available(iOS 14.0, *) {
             wkWebViewConfig.defaultWebpagePreferences.allowsContentJavaScript = true
         } else {
@@ -38,7 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appBoxWebConfig.wKWebViewConfiguration = wkWebViewConfig
 
         // -----------------------------------------------------------------------------------------
-        // AppBox 초기화
+        // [AppBox 기본 WebView] AppBox 초기화
+        // baseUrl과 projectId는 AppBox 콘솔에서 발급받은 서비스 값으로 교체합니다.
         // -----------------------------------------------------------------------------------------
         AppBox.shared.initSDK(
             baseUrl: "https://www.example.com",
@@ -46,14 +61,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             webConfig: appBoxWebConfig,
             debugMode: true
         )
+
+        // [선택: AppsFlyer] AppsFlyer UDL을 사용하는 앱만 Info.plist에 값을 입력하면 활성화됩니다.
+        configureAppsFlyerDeepLinking()
         
         // -----------------------------------------------------------------------------------------
-        // 웹뷰 사전 로딩
+        // [AppBox 기본 WebView] 웹뷰 사전 로딩
         // -----------------------------------------------------------------------------------------
         AppBox.shared.preloadWebView()
 
         // -----------------------------------------------------------------------------------------
-        // AppBox 인트로 설정 (선택)
+        // [AppBox 기본 WebView] AppBox 인트로 설정 (선택)
         // -----------------------------------------------------------------------------------------
         if let introItem1 = AppBoxIntroItems(
             imageUrl: "https://example.com/image.jpg"
@@ -71,12 +89,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // -----------------------------------------------------------------------------------------
-        // AppBox 당겨서 새로고침 설정
+        // [AppBox 기본 WebView] AppBox 당겨서 새로고침 설정
         // -----------------------------------------------------------------------------------------
         AppBox.shared.setPullDownRefresh(used: true)
 
         // -----------------------------------------------------------------------------------------
-        // SNS 로그인 초기화 (사용하는 것만 선택)
+        // [선택: SNS 로그인] SNS 로그인 초기화 (사용하는 것만 선택)
         // -----------------------------------------------------------------------------------------
         AppBoxSnsLogin.shared
             .initializeKakao(appKey: "YOUR_KAKAO_APPKEY") // 카카오
@@ -88,30 +106,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             urlScheme: "YOUR_NID_URLSCHEME"
         ) // 네이버
 
-        // 구글 로그인: Firebase Client ID 설정 필요
-        AppBoxPush.shared.initializeFirebaseClientID(
-            clientID: "YOUR_FIREBASE_CLIENTID"
-        )
+        // [선택: SNS 로그인] 구글 로그인은 위 Firebase Client ID 설정을 사용합니다.
 
         return true
     }
 
-    // MARK: - Push: APNs Token
+    // MARK: - [공통] Push: APNs Token
     func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
+        // [공통] APNs deviceToken을 SDK에 전달해야 AppBox push token 매핑이 완료됩니다.
         AppBoxPush.shared.appBoxPushApnsToken(apnsToken: deviceToken)
     }
 
-    // MARK: - URL Callback (SNS 로그인/외부앱 복귀 처리)
+    // MARK: - [공통] URL Callback (SNS 로그인/외부앱 복귀 처리)
     func application(
         _ app: UIApplication,
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
+        // [공통] SDK가 처리할 URL이면 true를 반환해 앱의 다른 URL 처리와 중복되지 않게 합니다.
         if AppBox.shared.handleURL(url) { return true }
         if AppBoxSnsLogin.shared.handleURL(url) { return true }
+        return false
+    }
+
+    // MARK: - [공통] Universal Link / AppsFlyer Callback
+    func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        // [공통] Universal Link는 AppBox/AppsFlyer 딥링크 처리 경로로 전달합니다.
+        _ = AppBox.shared.handleUserActivity(userActivity)
         return false
     }
 
@@ -134,20 +162,84 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-// MARK: - UNUserNotificationCenterDelegate
+private extension AppDelegate {
+    func configureAppsFlyerDeepLinking() {
+        // [선택: AppsFlyer] Info.plist 값이 비어 있으면 AppsFlyer 설정을 건너뜁니다.
+        guard let devKey = Bundle.main.appBoxTrimmedInfoString("APPBOX_APPSFLYER_DEV_KEY"),
+              let appleAppID = Bundle.main.appBoxTrimmedInfoString("APPBOX_APPSFLYER_APPLE_APP_ID") else {
+            return
+        }
+
+        // [선택: AppsFlyer] Listener를 먼저 등록한 뒤 configure/start를 호출해야 첫 딥링크 결과를 놓치지 않습니다.
+        AppBox.shared.setAppsFlyerDeepLinkListener { result in
+            switch result.status {
+            case .found:
+                Self.handleAppsFlyerDeepLink(result)
+            case .notFound:
+                break
+            case .error:
+                print("AppsFlyer deep link error: \(result.errorCode ?? "") \(result.errorMessage ?? "")")
+            @unknown default:
+                break
+            }
+        }
+
+        AppBox.shared.configureAppsFlyer(
+            AppBoxAppsFlyerConfig(devKey: devKey, appleAppID: appleAppID)
+        )
+        AppBox.shared.startAppsFlyer()
+    }
+
+    static func handleAppsFlyerDeepLink(_ result: AppBoxAppsFlyerDeepLinkResult) {
+        // [선택: AppsFlyer] 샘플 정책: value가 appBoxWeb이면 sub2 값을 이동할 웹 URL로 사용합니다.
+        let value = result.value ?? ""
+        let target = result.getSubParam(.sub2) ?? ""
+
+        guard value == "appBoxWeb", !target.isEmpty else {
+            return
+        }
+
+        AppBox.shared.setBaseUrl(baseUrl: normalizedAppsFlyerWebURL(target))
+        AppBox.shared.preloadWebView()
+    }
+
+    static func normalizedAppsFlyerWebURL(_ value: String) -> String {
+        // [선택: AppsFlyer] sub parameter가 도메인만 전달된 경우 https URL로 보정합니다.
+        if value.hasPrefix("http://") || value.hasPrefix("https://") {
+            return value
+        }
+
+        return "https://\(value)"
+    }
+}
+
+private extension Bundle {
+    func appBoxTrimmedInfoString(_ key: String) -> String? {
+        guard let value = object(forInfoDictionaryKey: key) as? String else {
+            return nil
+        }
+
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        // [선택: AppsFlyer] 빈 placeholder 값은 설정되지 않은 값으로 취급합니다.
+        return trimmed.isEmpty ? nil : trimmed
+    }
+}
+
+// MARK: - [공통] UNUserNotificationCenterDelegate
 extension AppDelegate: UNUserNotificationCenterDelegate {
 
-    // 알림이 클릭이 되었을 때
+    // [공통] 알림이 클릭이 되었을 때
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
+        // [공통] 클릭 정보를 SDK에 전달하면 INAPP/URL 이동 및 오픈 통계 처리가 이어집니다.
         AppBox.shared.movePush(response: response)
         completionHandler()
     }
 
-    // foreground일 때, 알림이 발생
+    // [공통] foreground일 때, 알림이 발생
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -155,12 +247,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             UNNotificationPresentationOptions
         ) -> Void
     ) {
+        // [공통] foreground 수신 시에도 배지/알림/소리를 표시하도록 지정합니다.
         completionHandler([.badge, .alert, .sound])
     }
 }
 
-// MARK: - InApp Message (선택)
-// 인앱 메시지 사용 시: UIApplicationDelegate 메서드로 구현하는 게 맞습니다.
+// MARK: - [AppBox 기본 WebView] InApp Message (선택)
+// [AppBox 기본 WebView] 인앱 메시지 사용 시: UIApplicationDelegate 메서드로 구현하는 게 맞습니다.
 extension AppDelegate {
     func application(
         _ application: UIApplication,
@@ -169,6 +262,7 @@ extension AppDelegate {
             UIBackgroundFetchResult
         ) -> Void
     ) {
+        // [AppBox 기본 WebView] silent/in-app push payload를 SDK 큐로 전달합니다.
         AppBox.shared.handledidReceiveRemoteNotification(userInfo: userInfo)
         completionHandler(.newData)
     }

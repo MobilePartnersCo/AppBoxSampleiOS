@@ -1,5 +1,5 @@
 {
-  "originHash" : "f98c441a1c08ef8710261e22075fd8d69e5484d6ea8f380177effc3657dd874c",
+  "originHash" : "adca1f7a6765ff1a94e409ae2425108a032586bf204d97a77b890f2de6680c62",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -42,8 +42,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MobilePartnersCo/AppBoxSDKFramwork",
       "state" : {
-        "revision" : "a6296ac02e4c5ad972f7acbc74b487b8f30c631c",
-        "version" : "1.2.6"
+        "revision" : "de7ba1c78bd4b85b8511aa3e2ec58d4216453a97",
+        "version" : "1.2.8"
+      }
+    },
+    {
+      "identity" : "appsflyerframework",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AppsFlyerSDK/AppsFlyerFramework",
+      "state" : {
+        "revision" : "d23b242b28c663618bce5fe9e2f3adb85b32bfb3",
+        "version" : "6.17.9"
       }
     },
     {

@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B1433E42F2752AE0074DB96 /* AppBoxSnsLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */; };
 		9B6E334E2DF8292B00D4D264 /* appBoxNotiServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B6E33472DF8292B00D4D264 /* appBoxNotiServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		9B6E33572DF8304600D4D264 /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9B6E33562DF8304600D4D264 /* AppBoxPushSDK */; };
 		9B9A0B832CFED64D0047B31F /* ObjcViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9A0B822CFED64D0047B31F /* ObjcViewController.m */; };
 		9BA76DA92CF593BD00FE2892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DA82CF593BD00FE2892 /* AppDelegate.swift */; };
 		9BA76DAB2CF593BD00FE2892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA76DAA2CF593BD00FE2892 /* SceneDelegate.swift */; };
@@ -18,9 +16,11 @@
 		9BA76DB22CF593BE00FE2892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB12CF593BE00FE2892 /* Assets.xcassets */; };
 		9BA76DB52CF593BE00FE2892 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9BA76DB42CF593BE00FE2892 /* Base */; };
 		9BAFD6712FA2EB45007F3D6E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAFD6702FA2EB45007F3D6E /* Lottie */; };
-		9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */; };
-		9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B12D717A84006E133B /* AppBoxPushSDK */; };
-		9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BECA3B32D717A84006E133B /* AppBoxSDK */; };
+		9BB25BFA2FB54FB000D59AFE /* AppBoxHealthSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BF92FB54FB000D59AFE /* AppBoxHealthSDK */; };
+		9BB25BFC2FB54FB000D59AFE /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BFB2FB54FB000D59AFE /* AppBoxPushSDK */; };
+		9BB25BFE2FB54FB000D59AFE /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BFD2FB54FB000D59AFE /* AppBoxSDK */; };
+		9BB25C002FB54FB000D59AFE /* AppBoxSnsLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BFF2FB54FB000D59AFE /* AppBoxSnsLoginSDK */; };
+		9BB25C042FB54FC400D59AFE /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25C032FB54FC400D59AFE /* AppBoxPushSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B6E33572DF8304600D4D264 /* AppBoxPushSDK in Frameworks */,
+				9BB25C042FB54FC400D59AFE /* AppBoxPushSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,11 +89,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BB25BFA2FB54FB000D59AFE /* AppBoxHealthSDK in Frameworks */,
+				9BB25BFC2FB54FB000D59AFE /* AppBoxPushSDK in Frameworks */,
+				9BB25C002FB54FB000D59AFE /* AppBoxSnsLoginSDK in Frameworks */,
 				9BAFD6712FA2EB45007F3D6E /* Lottie in Frameworks */,
-				9BECA3B42D717A84006E133B /* AppBoxSDK in Frameworks */,
-				9BECA3B02D717A84006E133B /* AppBoxHealthSDK in Frameworks */,
-				9B1433E42F2752AE0074DB96 /* AppBoxSnsLoginSDK in Frameworks */,
-				9BECA3B22D717A84006E133B /* AppBoxPushSDK in Frameworks */,
+				9BB25BFE2FB54FB000D59AFE /* AppBoxSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,7 +163,7 @@
 			);
 			name = appBoxNotiServiceExtension;
 			packageProductDependencies = (
-				9B6E33562DF8304600D4D264 /* AppBoxPushSDK */,
+				9BB25C032FB54FC400D59AFE /* AppBoxPushSDK */,
 			);
 			productName = appBoxNotiServiceExtension;
 			productReference = 9B6E33472DF8292B00D4D264 /* appBoxNotiServiceExtension.appex */;
@@ -185,11 +185,11 @@
 			);
 			name = sdkSample;
 			packageProductDependencies = (
-				9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */,
-				9BECA3B12D717A84006E133B /* AppBoxPushSDK */,
-				9BECA3B32D717A84006E133B /* AppBoxSDK */,
-				9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */,
 				9BAFD6702FA2EB45007F3D6E /* Lottie */,
+				9BB25BF92FB54FB000D59AFE /* AppBoxHealthSDK */,
+				9BB25BFB2FB54FB000D59AFE /* AppBoxPushSDK */,
+				9BB25BFD2FB54FB000D59AFE /* AppBoxSDK */,
+				9BB25BFF2FB54FB000D59AFE /* AppBoxSnsLoginSDK */,
 			);
 			productName = sdkSample;
 			productReference = 9BA76DA52CF593BD00FE2892 /* sdkSample.app */;
@@ -224,8 +224,8 @@
 			);
 			mainGroup = 9BA76D9C2CF593BD00FE2892;
 			packageReferences = (
-				9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
 				9BAFD66F2FA2EB45007F3D6E /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */,
 			);
 			productRefGroup = 9BA76DA62CF593BD00FE2892 /* Products */;
 			projectDirPath = "";
@@ -593,45 +593,46 @@
 				minimumVersion = 4.6.0;
 			};
 		};
-		9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
+		9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = exactVersion;
-				version = 1.2.6;
+				version = 1.2.8;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9B1433E32F2752AE0074DB96 /* AppBoxSnsLoginSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppBoxSnsLoginSDK;
-		};
-		9B6E33562DF8304600D4D264 /* AppBoxPushSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
-			productName = AppBoxPushSDK;
-		};
 		9BAFD6702FA2EB45007F3D6E /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9BAFD66F2FA2EB45007F3D6E /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		9BECA3AF2D717A84006E133B /* AppBoxHealthSDK */ = {
+		9BB25BF92FB54FB000D59AFE /* AppBoxHealthSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxHealthSDK;
 		};
-		9BECA3B12D717A84006E133B /* AppBoxPushSDK */ = {
+		9BB25BFB2FB54FB000D59AFE /* AppBoxPushSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxPushSDK;
 		};
-		9BECA3B32D717A84006E133B /* AppBoxSDK */ = {
+		9BB25BFD2FB54FB000D59AFE /* AppBoxSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9BECA3AE2D717A84006E133B /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			package = 9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
 			productName = AppBoxSDK;
+		};
+		9BB25BFF2FB54FB000D59AFE /* AppBoxSnsLoginSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			productName = AppBoxSnsLoginSDK;
+		};
+		9BB25C032FB54FC400D59AFE /* AppBoxPushSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BB25BF82FB54FB000D59AFE /* XCRemoteSwiftPackageReference "AppBoxSDKFramwork" */;
+			productName = AppBoxPushSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
