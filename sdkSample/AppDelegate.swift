@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             debugMode: true
         )
 
-        // [선택: AppsFlyer] AppsFlyer UDL을 사용하는 앱만 Info.plist에 값을 입력하면 활성화됩니다.
+        // [선택: AppsFlyer] AppsFlyer URI Scheme 딥링크를 사용하는 앱만 값을 입력하면 활성화됩니다.
         configureAppsFlyerDeepLinking()
         
         // -----------------------------------------------------------------------------------------
@@ -120,25 +120,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppBoxPush.shared.appBoxPushApnsToken(apnsToken: deviceToken)
     }
 
-    // MARK: - [공통] URL Callback (SNS 로그인/외부앱 복귀 처리)
+    // MARK: - [공통] URL Callback (SNS 로그인/AppsFlyer/외부앱 복귀 처리)
     func application(
         _ app: UIApplication,
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
-        // [공통] SDK가 처리할 URL이면 true를 반환해 앱의 다른 URL 처리와 중복되지 않게 합니다.
-        if AppBox.shared.handleURL(url) { return true }
-        if AppBoxSnsLogin.shared.handleURL(url) { return true }
+        // [공통] AppBox.shared.handleURL이 SNS 로그인, Push, AppsFlyer URI Scheme을 내부 라우팅합니다.
+        if AppBox.shared.handleURL(url, options: options) { return true }
         return false
     }
 
-    // MARK: - [공통] Universal Link / AppsFlyer Callback
+    // MARK: - [공통] Universal Link / UserActivity Callback
     func application(
         _ application: UIApplication,
         continue userActivity: NSUserActivity,
         restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
-        // [공통] Universal Link는 AppBox/AppsFlyer 딥링크 처리 경로로 전달합니다.
+        // [공통] 필요한 UserActivity를 AppBox 처리 경로로 전달합니다.
         _ = AppBox.shared.handleUserActivity(userActivity)
         return false
     }
@@ -164,64 +163,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 private extension AppDelegate {
     func configureAppsFlyerDeepLinking() {
-        // [선택: AppsFlyer] Info.plist 값이 비어 있으면 AppsFlyer 설정을 건너뜁니다.
-        guard let devKey = Bundle.main.appBoxTrimmedInfoString("APPBOX_APPSFLYER_DEV_KEY"),
-              let appleAppID = Bundle.main.appBoxTrimmedInfoString("APPBOX_APPSFLYER_APPLE_APP_ID") else {
+        let appsFlyerDevKey = ""
+        let appsFlyerAppleAppID = ""
+
+        guard !appsFlyerDevKey.isEmpty, !appsFlyerAppleAppID.isEmpty else {
             return
         }
 
-        // [선택: AppsFlyer] Listener를 먼저 등록한 뒤 configure/start를 호출해야 첫 딥링크 결과를 놓치지 않습니다.
-        AppBox.shared.setAppsFlyerDeepLinkListener { result in
-            switch result.status {
-            case .found:
-                Self.handleAppsFlyerDeepLink(result)
-            case .notFound:
-                break
-            case .error:
-                print("AppsFlyer deep link error: \(result.errorCode ?? "") \(result.errorMessage ?? "")")
-            @unknown default:
-                break
-            }
-        }
-
+        // [선택: AppsFlyer] Xcode URL Types에 URI Scheme을 등록하고,
+        // AppsFlyer Console deep link URL은 {scheme}://open 형태로 설정합니다.
         AppBox.shared.configureAppsFlyer(
-            AppBoxAppsFlyerConfig(devKey: devKey, appleAppID: appleAppID)
+            devKey: appsFlyerDevKey,
+            appleAppID: appsFlyerAppleAppID
         )
+        AppBox.shared.configureAppsFlyerJavaScriptBridge()
         AppBox.shared.startAppsFlyer()
-    }
-
-    static func handleAppsFlyerDeepLink(_ result: AppBoxAppsFlyerDeepLinkResult) {
-        // [선택: AppsFlyer] 샘플 정책: value가 appBoxWeb이면 sub2 값을 이동할 웹 URL로 사용합니다.
-        let value = result.value ?? ""
-        let target = result.getSubParam(.sub2) ?? ""
-
-        guard value == "appBoxWeb", !target.isEmpty else {
-            return
-        }
-
-        AppBox.shared.setBaseUrl(baseUrl: normalizedAppsFlyerWebURL(target))
-        AppBox.shared.preloadWebView()
-    }
-
-    static func normalizedAppsFlyerWebURL(_ value: String) -> String {
-        // [선택: AppsFlyer] sub parameter가 도메인만 전달된 경우 https URL로 보정합니다.
-        if value.hasPrefix("http://") || value.hasPrefix("https://") {
-            return value
-        }
-
-        return "https://\(value)"
-    }
-}
-
-private extension Bundle {
-    func appBoxTrimmedInfoString(_ key: String) -> String? {
-        guard let value = object(forInfoDictionaryKey: key) as? String else {
-            return nil
-        }
-
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        // [선택: AppsFlyer] 빈 placeholder 값은 설정되지 않은 값으로 취급합니다.
-        return trimmed.isEmpty ? nil : trimmed
     }
 }
 

@@ -7,8 +7,8 @@
 
 import UIKit
 import AppBoxSDK
-import AppBoxSnsLoginSDK
 
+@MainActor
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -26,8 +26,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         for urlContext in connectionOptions.urlContexts {
-            _ = AppBox.shared.handleURL(urlContext.url)
-            _ = AppBoxSnsLogin.shared.handleURL(urlContext.url)
+            _ = AppBox.shared.handleURL(
+                urlContext.url,
+                options: appOpenOptions(from: urlContext.options)
+            )
         }
     }
 
@@ -47,15 +49,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        guard let url = URLContexts.first?.url else { return }
+        guard let urlContext = URLContexts.first else { return }
 
         // [공통] Scene 기반 앱에서는 URL scheme callback이 AppDelegate 대신 이 메서드로 들어올 수 있습니다.
-        _ = AppBox.shared.handleURL(url)
-        _ = AppBoxSnsLogin.shared.handleURL(url)
+        _ = AppBox.shared.handleURL(
+            urlContext.url,
+            options: appOpenOptions(from: urlContext.options)
+        )
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        // [공통] Universal Link callback을 AppBox/AppsFlyer 처리 경로로 전달합니다.
+        // [공통] 필요한 UserActivity를 AppBox 처리 경로로 전달합니다.
         _ = AppBox.shared.handleUserActivity(userActivity)
+    }
+
+    private func appOpenOptions(from options: UIScene.OpenURLOptions) -> [UIApplication.OpenURLOptionsKey: Any] {
+        var result: [UIApplication.OpenURLOptionsKey: Any] = [:]
+
+        if let sourceApplication = options.sourceApplication {
+            result[.sourceApplication] = sourceApplication
+        }
+
+        result[.annotation] = options.annotation
+        result[.openInPlace] = options.openInPlace
+        return result
     }
 }
