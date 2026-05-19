@@ -42,6 +42,7 @@
 - WebView navigation 시작 시 deep link JS bridge ready 상태를 초기화해 이전 페이지 상태가 새 페이지 전달에 섞이지 않도록 했습니다.
 - `inapp.ready` 수신 경로를 기준으로 pending delivery를 flush하도록 정리했습니다.
 - `window.AppboxSDK.isReady === true` 확인 후 `window.AppboxSDK.deepLink.onReceive(payload)`를 호출합니다.
+- SwiftUI 앱 사용자는 배포 레포의 SwiftUI 연동 가이드를 확인하도록 README 안내를 추가했습니다.
 - Breaking change, public API 변경, 외부 의존성 변경은 없습니다.
 
 <details>
@@ -188,6 +189,7 @@ graph TB
 |---|---|---|---|
 | 푸시만 사용 | `AppBoxPushSDK` | `AppBoxPush.shared.initSDK(projectId:...)` | AppBox 웹뷰를 띄우지 않고 푸시, 토큰, 세그먼트, 전환, topic native API만 사용 |
 | AppBox 기본 WebView 사용 | `AppBoxSDK`, `AppBoxPushSDK` | `AppBox.shared.initSDK(...)` + `AppBox.shared.start(from:)` | AppBox가 `WKWebView`, navigation, bridge 전체를 관리 |
+| SwiftUI App lifecycle | 위 사용 유형과 동일 | `@UIApplicationDelegateAdaptor`, `UIViewControllerRepresentable` | 배포 레포의 SwiftUI 연동 가이드 참조 |
 | 고객사 자체 WKWebView 사용 | `AppBoxSDK` + 필요 시 `AppBoxPushSDK` | `AppBox.shared.attach(webView)` | 고객사가 만든 `WKWebView`는 유지하고 AppBox 인앱/웹 SDK bridge만 연결 |
 | HealthKit 추가 | 위 조합 + `AppBoxHealthSDK` | 별도 초기화 없음 | `application.getHealthStepCount` bridge 사용 시 추가 |
 | SNS 로그인 추가 | 위 조합 + `AppBoxSnsLoginSDK` | `AppBoxSnsLogin.shared.initialize...` | `application.snsLogin`, `application.snsLogout` 사용 시 추가 |
@@ -204,6 +206,14 @@ graph TB
 | 푸시만 사용 | README의 `2) 푸시만 사용` | `AppBoxSDK`를 초기화하지 않고 `AppBoxPushSDK`만 추가해 `AppBoxPush.shared.initSDK(projectId:...)`를 호출합니다. |
 | 고객사 자체 WKWebView 사용 | README의 `3) 고객사 자체 WKWebView 사용` | 기존 `WKWebView`를 유지하고 `AppBox.shared.attach(webView)`로 지원 bridge만 연결합니다. |
 | AppsFlyer 딥링크 선택 연동 | `sdkSample/AppDelegate.swift`, README의 `4) AppsFlyer 딥링크 선택 연동` | AppsFlyer를 쓰는 앱만 `AppBox.shared.configureAppsFlyer(devKey:appleAppID:)`, `configureAppsFlyerJavaScriptBridge()`, `startAppsFlyer()`를 호출합니다. URI Scheme은 Xcode URL Types에 등록하고 AppsFlyer Console에는 `{scheme}://open` 형태로 설정합니다. |
+
+### SwiftUI 앱에서 사용하는 경우
+
+현재 샘플 앱은 UIKit `AppDelegate`/`SceneDelegate` 기준입니다. SwiftUI `App` lifecycle 앱에서는 `@UIApplicationDelegateAdaptor`로 SDK 초기화와 push callback을 연결하고, AppBox 화면은 `UINavigationController` 기반 `UIViewControllerRepresentable` wrapper에서 실행해야 합니다.
+
+자세한 내용은 AppBoxSDK 배포 레포의 SwiftUI 연동 가이드를 확인하세요.
+
+- SwiftUI 연동 가이드: https://github.com/MobilePartnersCo/AppBoxSDKFramwork/blob/main/docs/SwiftUI-Integration-Guide.md
 
 ---
 
