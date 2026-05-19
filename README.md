@@ -36,15 +36,23 @@
 
 ---
 
-## 최신 업데이트 (v1.2.10, 2026.05.15)
+## 최신 업데이트 (v1.2.11, 2026.05.15)
+
+- AppsFlyer Deep Link payload를 AppBox 웹 SDK ready 이후에만 JavaScript로 전달하도록 보강했습니다.
+- WebView navigation 시작 시 deep link JS bridge ready 상태를 초기화해 이전 페이지 상태가 새 페이지 전달에 섞이지 않도록 했습니다.
+- `inapp.ready` 수신 경로를 기준으로 pending delivery를 flush하도록 정리했습니다.
+- `window.AppboxSDK.isReady === true` 확인 후 `window.AppboxSDK.deepLink.onReceive(payload)`를 호출합니다.
+- Breaking change, public API 변경, 외부 의존성 변경은 없습니다.
+
+<details>
+<summary>이전 업데이트 내역</summary>
+
+### v1.2.10 (2026.05.15)
 
 - `AppBox.shared.handleURL(_:options:)` API를 추가해 URL callback의 source application/options 정보를 SDK 라우팅에 전달합니다.
 - SNS 로그인 URL은 `AppBoxSnsLoginSDK`로 우선 라우팅하고, AppsFlyer는 `scheme://open` 형태의 URI Scheme 딥링크만 처리하도록 제한했습니다.
 - SceneDelegate 예제도 URLContext options를 AppDelegate openURL options 형태로 변환해 전달하도록 업데이트했습니다.
 - v1.2.9 변경 포함: AppsFlyer Deep Link JS bridge, landscape 대응, 스캐너 portrait 고정, PDF/Image viewer 회전 레이아웃 개선.
-
-<details>
-<summary>이전 업데이트 내역</summary>
 
 ### v1.2.9 (2026.05.15)
 
@@ -360,7 +368,7 @@ AppsFlyer URI Scheme 딥링크를 사용하는 앱은 Xcode `URL Types`에 수�
 </array>
 ```
 
-AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. Universal Link forwarding은 v1.2.9/v1.2.10 README 범위에 포함하지 않습니다.
+AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. Universal Link forwarding은 v1.2.11 README 범위에 포함하지 않습니다.
 
 ---
 
