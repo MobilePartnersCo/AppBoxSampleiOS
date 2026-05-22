@@ -36,7 +36,7 @@
 
 ---
 
-## 최신 업데이트 (v1.2.11, 2026.05.15)
+## 최신 업데이트 (v1.2.14, 2026.05.15)
 
 - AppsFlyer Deep Link payload를 AppBox 웹 SDK ready 이후에만 JavaScript로 전달하도록 보강했습니다.
 - WebView navigation 시작 시 deep link JS bridge ready 상태를 초기화해 이전 페이지 상태가 새 페이지 전달에 섞이지 않도록 했습니다.
@@ -378,7 +378,7 @@ AppsFlyer URI Scheme 딥링크를 사용하는 앱은 Xcode `URL Types`에 수�
 </array>
 ```
 
-AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. Universal Link forwarding은 v1.2.11 README 범위에 포함하지 않습니다.
+AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. Universal Link forwarding은 v1.2.14 README 범위에 포함하지 않습니다.
 
 ---
 
