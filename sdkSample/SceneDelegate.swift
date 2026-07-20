@@ -22,11 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // [공통] 앱이 종료된 상태에서 열린 Universal Link/URL scheme도 SDK에 전달합니다.
         for userActivity in connectionOptions.userActivities {
-            _ = AppBox.shared.handleUserActivity(userActivity)
+            _ = AppBox.handleUserActivity(userActivity)
         }
 
         for urlContext in connectionOptions.urlContexts {
-            _ = AppBox.shared.handleURL(
+            _ = AppBox.handleURL(
                 urlContext.url,
                 options: appOpenOptions(from: urlContext.options)
             )
@@ -52,7 +52,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let urlContext = URLContexts.first else { return }
 
         // [공통] Scene 기반 앱에서는 URL scheme callback이 AppDelegate 대신 이 메서드로 들어올 수 있습니다.
-        _ = AppBox.shared.handleURL(
+        _ = AppBox.handleURL(
             urlContext.url,
             options: appOpenOptions(from: urlContext.options)
         )
@@ -60,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         // [공통] 필요한 UserActivity를 AppBox 처리 경로로 전달합니다.
-        _ = AppBox.shared.handleUserActivity(userActivity)
+        _ = AppBox.handleUserActivity(userActivity)
     }
 
     private func appOpenOptions(from options: UIScene.OpenURLOptions) -> [UIApplication.OpenURLOptionsKey: Any] {

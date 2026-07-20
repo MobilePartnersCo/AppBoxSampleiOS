@@ -40,5 +40,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>APPBOX_SDK_INTERNAL_DEBUG</key>
+	<true/>
+	<key>APPBOX_SDK_INTERNAL_SERVER_DEBUG</key>
+	<true/>
 </dict>
 </plist>

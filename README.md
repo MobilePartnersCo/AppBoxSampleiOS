@@ -36,7 +36,82 @@
 
 ---
 
-## 최신 업데이트 (v1.2.14, 2026.05.15)
+## 5분 Quick Start: Base + Push
+
+AppBoxSDK 기반 서비스 앱은 Push를 공통으로 포함합니다. 앱 target에 `AppBoxSDK`와 `AppBoxPushSDK`를 연결하고, 초기화는 `AppBox` 정적 Facade 한 곳에서 수행합니다. 정적 Facade는 별도 인스턴스를 만들지 않고 `AppBox.initialize(...)`, `AppBox.start(from:)`처럼 `AppBox` 타입에서 기능을 바로 호출하는 사용 방식입니다.
+
+이 저장소의 실행 target은 Push, SNS Login, Health를 모두 연결한 전체 기능 확인용 샘플입니다. 아래 코드는 처음 적용할 때 복사할 Base + Push 기본 예제이며, 선택 기능은 뒤의 목적별 구성 예제에서 추가합니다.
+
+```swift
+import UIKit
+import UserNotifications
+import AppBoxSDK
+
+@main
+final class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    // [필수] AppBoxSDK 서비스 앱은 Push config를 공통으로 포함합니다.
+    // Base + Push만 사용할 때 firebaseClientID는 필요하지 않습니다.
+    let config = AppBoxInitConfig(
+      common: AppBoxCommonConfig(
+        projectId: "YOUR_PROJECT_ID",
+        debugMode: false
+      ),
+      webView: AppBoxWebViewInitConfig(
+        baseURL: "https://www.example.com"
+      ),
+      push: AppBoxPushInitConfig()
+    )
+
+    AppBox.initialize(config) { result in
+      // [주의] Push 모듈 초기화가 완료된 뒤 권한 요청과 APNs 등록을 시작합니다.
+      guard result.push.status == .INITIALIZED else {
+        print("Push 초기화 실패: \(result.push.message)")
+        return
+      }
+      AppBox.requestPushAuthorization { granted, error in
+        if let error {
+          print("Push 권한 요청 실패: \(error.localizedDescription)")
+          return
+        }
+        guard granted else {
+          print("사용자가 Push 권한을 허용하지 않았습니다.")
+          return
+        }
+        _ = AppBox.registerForRemoteNotifications()
+      }
+    }
+
+    return true
+  }
+
+  // [필수: Push] APNs deviceToken을 전달해야 AppBox Push token과 기기가 매핑됩니다.
+  func application(_ application: UIApplication,
+                   didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    _ = AppBox.handleAPNSToken(deviceToken)
+  }
+}
+```
+
+초기화 결과의 `status`가 `.INITIALIZED`이면 해당 기능을 사용할 수 있습니다. `.SKIPPED`는 설정하지 않았거나 현재 앱에 해당 Product가 연결되지 않은 상태이고, `.FAILED`는 초기화 실패입니다. 실패 원인은 각 결과의 `message`에서 확인합니다.
+
+`AppBoxPushInitConfig()`는 Push 기능을 요청하는 config입니다. `firebaseClientID` 문자열은 Push 자체의 필수값이 아닙니다. Google 로그인을 활성화할 때만 로그인 구성의 Push config에 Firebase OAuth Client ID를 전달합니다. 알림 클릭, foreground 수신, background/silent payload callback까지 포함한 전체 코드는 아래 `1) AppBox 기본 WebView 사용` 예제를 함께 적용합니다.
+
+---
+
+## 최신 업데이트 (v1.2.20, 2026.07.20)
+
+- AppBoxSDK 기반 서비스 앱의 진입점을 `AppBox.initialize(...)`와 `AppBox.*` 정적 Facade로 통일했습니다.
+- Push는 모든 AppBoxSDK 서비스 앱에서 공통으로 연결하고, SNS Login과 Health Product는 필요한 기능에 따라 추가합니다.
+- Push 권한 요청과 APNs 등록을 초기화 결과 이후에 앱이 명시적으로 시작하도록 lifecycle 예제를 갱신했습니다.
+- Notification Service Extension과 AppBoxSDK가 없는 Push-only 앱은 기존 `AppBoxPush.shared` API를 유지합니다.
+- Swift와 Objective-C 샘플, URL/Universal Link 및 AppsFlyer 예제를 정적 Facade 기준으로 정리했습니다.
+
+<details>
+<summary>이전 업데이트 내역</summary>
+
+### v1.2.14 (2026.05.15)
 
 - AppsFlyer Deep Link payload를 AppBox 웹 SDK ready 이후에만 JavaScript로 전달하도록 보강했습니다.
 - WebView navigation 시작 시 deep link JS bridge ready 상태를 초기화해 이전 페이지 상태가 새 페이지 전달에 섞이지 않도록 했습니다.
@@ -44,9 +119,6 @@
 - `window.AppboxSDK.isReady === true` 확인 후 `window.AppboxSDK.deepLink.onReceive(payload)`를 호출합니다.
 - SwiftUI 앱 사용자는 배포 레포의 SwiftUI 연동 가이드를 확인하도록 README 안내를 추가했습니다.
 - Breaking change, public API 변경, 외부 의존성 변경은 없습니다.
-
-<details>
-<summary>이전 업데이트 내역</summary>
 
 ### v1.2.10 (2026.05.15)
 
@@ -129,8 +201,9 @@
 
 | 모듈 | 선택 기준 | 설명 |
 |---|---|---|
-| `AppBoxSDK` | AppBox 기본 WebView 또는 고객사 자체 `WKWebView` bridge 사용 시 | 핵심(WebView/브릿지/공통 UI/스토리지/시스템 기능/웹 기반 인앱 메시지 연동) |
-| `AppBoxPushSDK` | 푸시/FCM 사용 시, 또는 AppBox 기본 WebView 조합 | 푸시/FCM 연동, Push-only/sendMessage 호환 native API 제공 |
+| `AppBoxSDK` | AppBox 기본 WebView 또는 고객사 자체 `WKWebView` bridge 사용 시 | 핵심(WebView/브릿지/공통 UI/스토리지/시스템 기능/Native In-App 연동) |
+| `AppBoxPushSDK` | AppBoxSDK 서비스 앱에서 공통 필수, 또는 Push-only 사용 시 | 푸시/FCM 연동, Push-only/sendMessage 호환 native API 제공 |
+| `AppBoxInappMessageSDK` | AppBoxSDK가 없는 Native In-App standalone 앱에서만 직접 선택 | Native In-App sync/display/manual show 제공. AppBoxSDK 사용자는 직접 import하지 않음 |
 | `AppBoxHealthSDK` | HealthKit 기능 사용 시 | HealthKit(걸음 수 등) |
 | `AppBoxSnsLoginSDK` | SNS 로그인 사용 시 | 네이버/카카오/구글/애플 로그인 |
 | `AppBoxCoreSDK` | 직접 선택하지 않음 | AppBoxSDK/AppBoxPushSDK의 설정, 네트워크, CoreData, 암호화 공통 기능을 위한 내부 의존성 |
@@ -164,8 +237,8 @@ graph TB
 
     AppBoxSDK -->|내부 의존| AppBoxCoreSDK
     AppBoxSDK -->|내부 의존| AppBoxWebViewSDK
-    AppBoxSDK -->|필수| AppBoxPushSDK
-    AppBoxSDK -->|앱 타겟에 별도 추가 필요| Lottie
+    AppBoxSDK -->|서비스 앱 공통| AppBoxPushSDK
+    AppBoxSDK -->|전이 의존| Lottie
     AppBoxSDK -.->|선택| AppBoxHealthSDK
     AppBoxSDK -.->|선택| AppBoxSnsLoginSDK
 
@@ -188,24 +261,156 @@ graph TB
 | 사용 상황 | 앱 타겟에 추가할 Product | 초기화 진입점 | 설명 |
 |---|---|---|---|
 | 푸시만 사용 | `AppBoxPushSDK` | `AppBoxPush.shared.initSDK(projectId:...)` | AppBox 웹뷰를 띄우지 않고 푸시, 토큰, 세그먼트, 전환, topic native API만 사용 |
-| AppBox 기본 WebView 사용 | `AppBoxSDK`, `AppBoxPushSDK` | `AppBox.shared.initSDK(...)` + `AppBox.shared.start(from:)` | AppBox가 `WKWebView`, navigation, bridge 전체를 관리 |
+| AppBox 기본 WebView 사용 | `AppBoxSDK` + `AppBoxPushSDK` + 필요한 선택 Product | `AppBox.initialize(...)` + `AppBox.start(from:)` | AppBox가 `WKWebView`, navigation, bridge 전체를 관리 |
 | SwiftUI App lifecycle | 위 사용 유형과 동일 | `@UIApplicationDelegateAdaptor`, `UIViewControllerRepresentable` | 배포 레포의 SwiftUI 연동 가이드 참조 |
-| 고객사 자체 WKWebView 사용 | `AppBoxSDK` + 필요 시 `AppBoxPushSDK` | `AppBox.shared.attach(webView)` | 고객사가 만든 `WKWebView`는 유지하고 AppBox 인앱/웹 SDK bridge만 연결 |
+| 고객사 자체 WKWebView 사용 | `AppBoxSDK` + `AppBoxPushSDK` + 필요한 선택 Product | `AppBox.initialize(...)` + `AppBox.attachWebView(...)` | 고객사가 만든 `WKWebView`는 유지하고 AppBox 인앱/웹 SDK bridge만 연결 |
 | HealthKit 추가 | 위 조합 + `AppBoxHealthSDK` | 별도 초기화 없음 | `application.getHealthStepCount` bridge 사용 시 추가 |
-| SNS 로그인 추가 | 위 조합 + `AppBoxSnsLoginSDK` | `AppBoxSnsLogin.shared.initialize...` | `application.snsLogin`, `application.snsLogout` 사용 시 추가 |
+| SNS 로그인 추가 | 위 조합 + `AppBoxSnsLoginSDK` | `AppBoxAuthInitConfig` | `application.snsLogin`, `application.snsLogout` 사용 시 추가 |
 
 `AppBoxCoreSDK`, `AppBoxWebViewSDK`는 내부 의존성입니다. 고객사 앱 코드에서 직접 import하거나 Product 선택 기준으로 안내하지 않습니다.
 
 ### 샘플에서 확인할 위치
 
-이 샘플 앱의 실행 타겟은 AppBox 기본 WebView 방식입니다. Push-only와 고객사 자체 `WKWebView` 방식은 같은 SDK package에서 선택 적용할 수 있도록 README에 최소 적용 코드를 분리해 제공합니다.
+이 샘플 앱의 실행 target은 AppBox 기본 WebView에 Push, SNS Login, Health Product를 모두 연결한 전체 기능 확인용 샘플입니다. 사용자가 복사할 Base + Push 기본 예제와 Push-only, 고객사 자체 `WKWebView` 방식은 README에 분리해 제공합니다.
 
 | 사용 유형 | 확인 위치 | 적용 방법 |
 |---|---|---|
-| AppBox 기본 WebView 사용 | `sdkSample/AppDelegate.swift`, `sdkSample/ViewController.swift`, `sdkSample/SceneDelegate.swift` | 현재 샘플 앱에 적용된 기본 흐름입니다. `AppBox.shared.initSDK(...)` 후 화면에서 `AppBox.shared.start(from:)`를 호출합니다. |
+| AppBox 기본 WebView 전체 기능 샘플 | `sdkSample/AppDelegate.swift`, `sdkSample/ViewController.swift`, `sdkSample/SceneDelegate.swift` | Push, SNS Login, Health Product를 연결한 실행 예제입니다. `AppBox.initialize(...)` 후 화면에서 `AppBox.start(from:)`를 호출합니다. |
 | 푸시만 사용 | README의 `2) 푸시만 사용` | `AppBoxSDK`를 초기화하지 않고 `AppBoxPushSDK`만 추가해 `AppBoxPush.shared.initSDK(projectId:...)`를 호출합니다. |
-| 고객사 자체 WKWebView 사용 | README의 `3) 고객사 자체 WKWebView 사용` | 기존 `WKWebView`를 유지하고 `AppBox.shared.attach(webView)`로 지원 bridge만 연결합니다. |
-| AppsFlyer 딥링크 선택 연동 | `sdkSample/AppDelegate.swift`, README의 `4) AppsFlyer 딥링크 선택 연동` | AppsFlyer를 쓰는 앱만 `AppBox.shared.configureAppsFlyer(devKey:appleAppID:)`, `configureAppsFlyerJavaScriptBridge()`, `startAppsFlyer()`를 호출합니다. URI Scheme은 Xcode URL Types에 등록하고 AppsFlyer Console에는 `{scheme}://open` 형태로 설정합니다. |
+| 고객사 자체 WKWebView 사용 | README의 `3) 고객사 자체 WKWebView 사용` | 기존 `WKWebView`를 유지하고 `AppBox.attachWebView(...)`로 지원 bridge만 연결합니다. |
+| 인앱 표시 화면 선택 | README의 `4) 인앱 메시지 표시 화면 선택` | 관리 WebView는 자동 처리하고, 일반 native/고객사 WKWebView는 표시 허용 화면에서 display screen lifecycle을 전달합니다. |
+| AppsFlyer 딥링크 선택 연동 | `sdkSample/AppDelegate.swift`, README의 `5) AppsFlyer 딥링크 선택 연동` | AppsFlyer config를 `AppBoxInitConfig`에 포함하고 초기화 성공 후 JavaScript bridge와 AppsFlyer를 시작합니다. URI Scheme은 Xcode URL Types에 등록하고 AppsFlyer Console에는 `{scheme}://open` 형태로 설정합니다. |
+
+### 서비스 앱 목적별 구성
+
+Push는 네 가지 서비스 앱 구성에 공통입니다. SNS Login은 Auth config로 추가하고, Health는 config 없이 Product와 capability 연결 상태로 자동 감지됩니다.
+
+| 사용 목적 | 앱 target Product | `AppBoxInitConfig` |
+|---|---|---|
+| 기본 | `AppBoxSDK` + `AppBoxPushSDK` | `common + webView + push` |
+| 로그인 | 기본 + `AppBoxSnsLoginSDK` | `common + webView + push + auth` |
+| 헬스 | 기본 + `AppBoxHealthSDK` | `common + webView + push`, Health 자동 감지 |
+| 헬스+로그인 | 기본 + `AppBoxHealthSDK` + `AppBoxSnsLoginSDK` | `common + webView + push + auth`, Health 자동 감지 |
+
+```swift
+let common = AppBoxCommonConfig(
+  projectId: "YOUR_PROJECT_ID",
+  debugMode: false
+)
+let webView = AppBoxWebViewInitConfig(
+  baseURL: "https://www.example.com"
+)
+// [필수: 기본/헬스] Push만 사용할 때는 Firebase OAuth Client ID가 필요하지 않습니다.
+let basePush = AppBoxPushInitConfig()
+
+// [선택: Google 로그인] Google Sign-In은 FirebaseOptions.clientID를 사용합니다.
+// Google 로그인을 사용하지 않는 로그인 구성은 basePush를 그대로 사용할 수 있습니다.
+let googleLoginPush = AppBoxPushInitConfig(
+  firebaseClientID: "YOUR_FIREBASE_CLIENTID"
+)
+
+// [선택: SNS 로그인] 필요한 provider만 활성화하고 실제 console 값으로 교체합니다.
+let auth = AppBoxAuthInitConfig(
+  googleEnabled: true,
+  appleEnabled: true,
+  kakaoNativeAppKey: "YOUR_KAKAO_APPKEY",
+  naverAppName: "YOUR_NID_APPNAME",
+  naverClientId: "YOUR_NID_CLIENTID",
+  naverClientSecret: "YOUR_NID_CLIENTSECRET",
+  naverURLScheme: "YOUR_NID_URLSCHEME"
+)
+
+let defaultConfig = AppBoxInitConfig(
+  common: common,
+  webView: webView,
+  push: basePush
+)
+let loginConfig = AppBoxInitConfig(
+  common: common,
+  webView: webView,
+  push: googleLoginPush,
+  auth: auth
+)
+let healthConfig = AppBoxInitConfig(
+  common: common,
+  webView: webView,
+  push: basePush
+)
+let healthAndLoginConfig = AppBoxInitConfig(
+  common: common,
+  webView: webView,
+  push: googleLoginPush,
+  auth: auth
+)
+```
+
+Google과 Apple 로그인은 Firebase 초기화 성공에 의존합니다. 그중 Google Sign-In은 `FirebaseOptions.clientID`가 반드시 필요하므로 `googleEnabled: true`인 구성에서는 `AppBoxPushInitConfig(firebaseClientID:)`를 사용합니다. Apple 로그인만 사용하는 경우에는 별도 Firebase OAuth Client ID가 필요하지 않습니다. Kakao/Naver 값과 각 URL scheme도 provider console 설정으로 교체해야 합니다.
+
+### AppBoxSDK를 사용하지 않는 standalone 조합
+
+다음 조합은 AppBoxSDK 서비스 앱의 정적 Facade 계약과 분리됩니다. WebView가 필요하지 않으므로 `AppBox.initialize(...)`를 호출하지 않고 각 Product의 feature facade를 사용합니다.
+
+| 사용 목적 | 앱 target Product | 초기화 진입점 |
+|---|---|---|
+| Push-only | `AppBoxPushSDK` | `AppBoxPush.shared.initSDK(projectId:...)` |
+| Native In-App-only | `AppBoxInappMessageSDK` | `AppBoxInappMessage.shared.initSDK(projectId:...)` |
+| Push + Native In-App | `AppBoxPushSDK` + `AppBoxInappMessageSDK` | 두 feature facade를 각각 한 번 초기화 |
+| Notification Service Extension | Extension target의 `AppBoxPushSDK` | `AppBoxPush.shared.createFCMImage(...)` |
+
+Native In-App만 사용하는 최소 예제입니다.
+
+```swift
+import UIKit
+import AppBoxInappMessageSDK
+
+// [standalone] AppBoxSDK가 없으므로 In-App feature facade를 직접 초기화합니다.
+AppBoxInappMessage.shared.initSDK(
+  projectId: "YOUR_PROJECT_ID",
+  debugMode: false
+)
+
+final class InAppViewController: UIViewController {
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+
+    // [주의] 실제로 In-App 표시를 허용할 화면에서만 진입을 알립니다.
+    AppBoxInappMessage.shared.enterDisplayScreen(delay: 0.5)
+    AppBoxInappMessage.shared.sync()
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+
+    // [필수] enter와 짝을 맞춰 화면 이탈을 전달합니다.
+    AppBoxInappMessage.shared.leaveDisplayScreen()
+  }
+}
+```
+
+Push와 Native In-App을 함께 사용하되 AppBox WebView가 없는 앱은 두 Product를 각각 초기화합니다.
+
+```swift
+import AppBoxPushSDK
+import AppBoxInappMessageSDK
+
+// [standalone Push] 기존 Push callback과 APNs token 전달 계약을 그대로 적용합니다.
+AppBoxPush.shared.initSDK(
+  projectId: "YOUR_PROJECT_ID",
+  debugMode: false,
+  autoRegisterForAPNS: true
+) { result, error, pushPermissionGranted in
+  print(error?.localizedDescription ?? result?.message ?? "")
+}
+
+// [standalone In-App] 같은 projectId로 초기화하면 INAPP push click/silent payload를
+// AppBoxPushSDK가 In-App handler로 연결할 수 있습니다.
+AppBoxInappMessage.shared.initSDK(
+  projectId: "YOUR_PROJECT_ID",
+  debugMode: false
+)
+```
+
+Push 클릭은 `AppBoxPush.shared.saveNotiClick(_:)`, silent payload는 `AppBoxPush.shared.handleRemoteNotification(userInfo:)`로 전달합니다. 표시 화면에서는 `AppBoxInappMessage.shared.enterDisplayScreen(delay:)`와 `leaveDisplayScreen()`을 사용합니다. AppBoxSDK 서비스 앱에서는 이 feature facade들을 직접 초기화하지 않습니다.
 
 ### SwiftUI 앱에서 사용하는 경우
 
@@ -224,7 +429,7 @@ graph TB
 - 플로팅 메뉴, 로컬 푸시, 앱 평가, 달력, 팝업(전체/중앙/바텀시트), 이미지 뷰어, 외부 페이지 열기
 - 바코드/QR 스캐너, QR/바코드 팝업, 업데이트 실행, 다른 앱 실행
 - 공유하기, 앱 종료, 위치 조회, 전화걸기, 문자보내기, 걸음수(HealthKit), 푸시 토큰, 세그먼트 전송 등
-- 웹 SDK 브릿지 기반 인앱 메시지 표시, 노출/클릭 이벤트 큐, INAPP 푸시 클릭 연동
+- Native In-App 메시지 표시, 노출/클릭 이벤트 큐, INAPP 푸시 클릭 및 웹 SDK trigger 연동
 - OS 버전 조회(`application.getOSVersion`), 연락처 선택(`phone.getContacts`)
 - SNS 로그인(선택): 네이버/카카오/구글/애플 (`application.snsLogin`, `application.snsLogout`)
 - AppsFlyer URI Scheme Deep Link 수신 및 웹 JS handler 전달
@@ -255,6 +460,7 @@ AppBoxSDK는 Swift Package Manager를 통해 배포됩니다.
    ```
 
 3. Dependency Rule을 설정하고 Add Package를 눌러 추가합니다.
+   이 샘플은 exact `1.2.20`을 사용합니다. Lottie는 AppBoxSDK의 전이 의존성이므로 앱 target에 별도 Product로 추가하지 않습니다.
    ![SPM Step2](https://raw.githubusercontent.com/MobilePartnersCo/AppBoxSDKFramwork/main/resource/image/spm2.png)
 
 4. 사용 유형에 맞는 Product를 타겟에 추가합니다.
@@ -362,7 +568,7 @@ AppBoxSDK는 Swift Package Manager를 통해 배포됩니다.
 
 ### Info.plist (AppsFlyer URI Scheme 딥링크, 선택)
 
-AppsFlyer URI Scheme 딥링크를 사용하는 앱은 Xcode `URL Types`에 수신 scheme을 등록합니다. `devKey`, `appleAppID`는 Info.plist 필수 키가 아니며 `AppBox.shared.configureAppsFlyer(devKey:appleAppID:)`에 문자열로 전달합니다.
+AppsFlyer URI Scheme 딥링크를 사용하는 앱은 Xcode `URL Types`에 수신 scheme을 등록합니다. `devKey`, `appleAppID`는 Info.plist 필수 키가 아니며 `AppBoxAppsFlyerConfig`를 통해 `AppBoxInitConfig`에 전달합니다.
 
 ```xml
 <key>CFBundleURLTypes</key>
@@ -378,7 +584,7 @@ AppsFlyer URI Scheme 딥링크를 사용하는 앱은 Xcode `URL Types`에 수�
 </array>
 ```
 
-AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. Universal Link forwarding은 v1.2.14 README 범위에 포함하지 않습니다.
+AppsFlyer OneLink/URI Scheme 설정의 deep link URL은 `{scheme}://open` 형태를 사용합니다. URL과 Universal Link callback은 SceneDelegate 또는 AppDelegate에서 `AppBox`에 전달합니다.
 
 ---
 
@@ -455,27 +661,22 @@ class NotificationService: UNNotificationServiceExtension {
 
 ### 1) AppBox 기본 WebView 사용
 
-AppBox가 웹뷰를 생성하고 bridge 전체를 관리하는 방식입니다. 웹사이트를 앱처럼 패키징하는 일반 AppBoxSDK 사용자는 이 방식을 사용합니다.
+AppBox가 웹뷰를 만들고 웹 페이지와 앱 사이의 연동을 관리하는 방식입니다. 웹사이트를 앱으로 제공하는 일반 AppBoxSDK 사용자는 이 방식을 사용합니다.
 
 ```swift
 import UIKit
 import WebKit
 import UserNotifications
 import AppBoxSDK
-import AppBoxPushSDK
-import AppBoxSnsLoginSDK
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    // [필수: Push] 앱이 실행 중일 때도 알림 이벤트를 받도록 delegate를 지정합니다.
     UNUserNotificationCenter.current().delegate = self
 
-    // Google 로그인 등 Firebase Client ID가 필요한 기능은 AppBox 초기화 전에 설정합니다.
-    AppBoxPush.shared.initializeFirebaseClientID(
-      clientID: "YOUR_FIREBASE_CLIENTID"
-    )
-
+    // [선택] 별도의 WKWebViewConfiguration이 필요한 경우에만 작성합니다.
     let appBoxWebConfig = AppBoxWebConfig()
     let wkWebViewConfig = WKWebViewConfiguration()
     if #available(iOS 14.0, *) {
@@ -485,57 +686,101 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationC
     }
     appBoxWebConfig.wKWebViewConfiguration = wkWebViewConfig
 
-    AppBox.shared.initSDK(
-      baseUrl: "https://www.example.com",
-      projectId: "YOUR_PROJECT_ID",
-      webConfig: appBoxWebConfig,
-      debugMode: true
+    // [필수] Project ID, 첫 화면 URL, Push 설정을 한 번에 전달합니다.
+    let config = AppBoxInitConfig(
+      common: AppBoxCommonConfig(projectId: "YOUR_PROJECT_ID", debugMode: false),
+      webView: AppBoxWebViewInitConfig(
+        baseURL: "https://www.example.com",
+        webConfig: appBoxWebConfig
+      ),
+      push: AppBoxPushInitConfig()
     )
 
-    AppBox.shared.preloadWebView()
-    AppBox.shared.setPullDownRefresh(used: true)
+    AppBox.initialize(config) { result in
+      // INITIALIZED: 사용 가능 / SKIPPED: 설정하지 않음 / FAILED: 초기화 실패
+      print("WebView: \(result.webView.status.rawValue) - \(result.webView.message)")
+      print("Push: \(result.push.status.rawValue) - \(result.push.message)")
 
-    AppBoxSnsLogin.shared.initializeKakao(appKey: "YOUR_KAKAO_APPKEY")
-    AppBoxSnsLogin.shared.initializeNaver(
-      appName: "YOUR_NID_APPNAME",
-      clientId: "YOUR_NID_CLIENTID",
-      clientSecret: "YOUR_NID_CLIENTSECRET",
-      urlScheme: "YOUR_NID_URLSCHEME"
-    )
+      // [선택] 첫 화면을 빠르게 열고 싶을 때 WebView 초기화 후 미리 로드합니다.
+      if result.webView.status == .INITIALIZED {
+        AppBox.preloadWebView(completion: nil)
+      }
+
+      // [필수: Push] Push 초기화가 끝난 뒤 권한 요청과 APNs 등록을 시작합니다.
+      guard result.push.status == .INITIALIZED else {
+        print("Push 초기화 실패: \(result.push.message)")
+        return
+      }
+      AppBox.requestPushAuthorization { granted, error in
+        if let error {
+          print("Push 권한 요청 실패: \(error.localizedDescription)")
+          return
+        }
+        guard granted else {
+          print("사용자가 Push 권한을 허용하지 않았습니다.")
+          return
+        }
+        guard AppBox.registerForRemoteNotifications() else {
+          print("APNs 등록 요청을 시작하지 못했습니다.")
+          return
+        }
+      }
+    }
+
+    // [선택] AppBox가 관리하는 WebView에서 당겨서 새로고침을 사용합니다.
+    AppBox.setPullDownRefresh(true)
 
     return true
   }
 
   func application(_ application: UIApplication,
                    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    AppBoxPush.shared.appBoxPushApnsToken(apnsToken: deviceToken)
+    // [필수: Push] APNs가 발급한 token을 AppBox에 전달합니다.
+    _ = AppBox.handleAPNSToken(deviceToken)
+  }
+
+  func application(_ application: UIApplication,
+                   didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    print("APNs registration failed: \(error.localizedDescription)")
   }
 
   func application(_ app: UIApplication,
                    open url: URL,
                    options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    if AppBox.shared.handleURL(url, options: options) { return true }
+    // SNS 로그인 또는 외부 앱에서 돌아올 때 받은 URL을 AppBox에 전달합니다.
+    if AppBox.handleURL(url, options: options) { return true }
     return false
   }
 
   func application(_ application: UIApplication,
                    continue userActivity: NSUserActivity,
                    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-    _ = AppBox.shared.handleUserActivity(userActivity)
+    // Universal Link를 AppBox에 전달합니다.
+    _ = AppBox.handleUserActivity(userActivity)
     return false
   }
 
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse,
                               withCompletionHandler completionHandler: @escaping () -> Void) {
-    AppBox.shared.movePush(response: response)
+    // 사용자가 알림을 눌렀을 때 이동 및 통계 처리를 AppBox에 맡깁니다.
+    AppBox.movePush(response)
     completionHandler()
+  }
+
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              willPresent notification: UNNotification,
+                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // 앱 실행 중에 도착한 알림을 AppBox에 전달하고 화면에도 표시합니다.
+    _ = AppBox.handleForegroundNotification(notification.request)
+    completionHandler([.badge, .alert, .sound])
   }
 
   func application(_ application: UIApplication,
                    didReceiveRemoteNotification userInfo: [AnyHashable : Any],
                    fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    AppBox.shared.handledidReceiveRemoteNotification(userInfo: userInfo)
+    // background/silent Push payload를 AppBox에 전달합니다.
+    AppBox.handleRemoteNotification(userInfo: userInfo)
     completionHandler(.newData)
   }
 }
@@ -544,7 +789,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationC
 웹뷰 실행:
 
 ```swift
-AppBox.shared.start(from: self) { isSuccess, error in
+AppBox.start(from: self) { isSuccess, error in
   if isSuccess {
     print("AppBox:: SDK 실행 성공")
   } else {
@@ -552,6 +797,8 @@ AppBox.shared.start(from: self) { isSuccess, error in
   }
 }
 ```
+
+Base URL과 debug mode는 초기화 config에서 한 번만 설정합니다. 화면에서는 초기화를 반복하거나 같은 값을 다시 덮어쓰지 않고 `AppBox.start(from:)`만 호출합니다.
 
 ### 2) 푸시만 사용
 
@@ -630,36 +877,105 @@ import AppBoxSDK
 final class CustomerWebViewController: UIViewController, WKNavigationDelegate {
   private let webView = WKWebView()
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    AppBox.attachWebView(webView)
+    AppBox.attachNavigationObservation(webView, forwardingTo: self)
+  }
 
-    AppBox.shared.attach(webView)
-    AppBox.shared.setActiveWebView(webView)
-    AppBox.shared.attachNavigationObservation(webView, forwardingTo: self)
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    AppBox.setActiveWebView(webView)
+    AppBox.enterInAppDisplayScreen(delay: 0.5)
   }
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
 
-    AppBox.shared.detach(webView)
-    AppBox.shared.detachNavigationObservation(webView)
+    AppBox.leaveInAppDisplayScreen()
+    AppBox.clearActiveWebView(webView)
+    AppBox.detachNavigationObservation(webView)
+    AppBox.detachWebView(webView)
   }
 }
 ```
 
-고객사 자체 `WKWebView` attach 경로는 웹 인앱메시지 lifecycle 연결이 목적입니다. 허용 action은 `appbox.notification.ping`, `appbox.getAppId`, `inapp.*` 중심이며, 전체 AppBox bridge action을 외부 웹뷰에 모두 열지 않습니다.
+고객사 자체 `WKWebView` attach 경로는 웹 bridge와 Native In-App lifecycle 연결이 목적입니다. 허용 action은 `appbox.notification.ping`, `appbox.getAppId`, `inapp.*` 중심이며, 전체 AppBox bridge action을 외부 웹뷰에 모두 열지 않습니다.
 
-### 4) AppsFlyer 딥링크 선택 연동
+`AppBox.setActiveWebView(...)`는 JavaScript bridge 이벤트를 전달할 WebView를 선택합니다. Native In-App을 표시할 ViewController를 직접 지정하는 API는 아닙니다.
 
-AppsFlyer URI Scheme 딥링크는 AppBoxSDK API로 설정합니다. 서비스 앱은 AppsFlyer SDK 타입을 직접 import하지 않습니다. `devKey`와 `appleAppID`는 문자열로 전달하며 JS function name은 받지 않습니다. Native는 항상 현재 AppBox WebView에 `window.AppboxSDK.deepLink.onReceive(payload)`를 호출합니다.
+### 4) 인앱 메시지 표시 화면 선택
+
+`AppBoxInitConfig`의 `inApp`을 생략하면 Native In-App은 기본 활성화됩니다. 현재 API는 특정 `UIView`나 `UIViewController`를 presenter 인자로 받지 않습니다. 대신 인앱 표시를 허용할 화면의 lifecycle에서 display screen 진입과 이탈을 전달하면 SDK가 현재 화면 계층 위에 Native In-App을 표시합니다.
+
+`AppBox.start(from:)`로 실행한 AppBox 관리 WebView는 SDK 내부에서 display screen lifecycle을 자동 처리합니다. 관리 WebView를 사용하는 앱에서는 다음 `enter/leave` API를 중복 호출하지 않습니다.
+
+일반 native 화면에서 인앱 표시를 허용하려면 다음처럼 적용합니다.
 
 ```swift
-AppBox.shared.configureAppsFlyer(
+final class ProductViewController: UIViewController {
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    AppBox.enterInAppDisplayScreen(delay: 0.5)
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    AppBox.leaveInAppDisplayScreen()
+  }
+}
+```
+
+여러 화면에서 동시에 호출하지 말고, 실제로 인앱을 허용할 한 화면 계층에서 `enter/leave`를 균형 있게 호출합니다. 고객사 자체 WKWebView는 위 `CustomerWebViewController` 예제처럼 bridge lifecycle과 display screen lifecycle을 모두 연결합니다.
+
+표시 가능한 화면이 활성화된 동안 동기화, 특정 캠페인 표시 요청과 custom action listener를 사용할 수 있습니다.
+
+```swift
+AppBox.setInAppActionListener { actionValue in
+  print("In-App custom action: \(actionValue)")
+}
+
+AppBox.syncInApp { success, error in
+  print(error?.localizedDescription ?? "In-App sync: \(success)")
+}
+
+AppBox.showInAppCampaign("CAMPAIGN_CODE") { shown, error in
+  print(error?.localizedDescription ?? "In-App shown: \(shown)")
+}
+```
+
+`showInAppCampaign`은 강제 표시 API가 아닙니다. 활성 display screen, 서버 캠페인 및 MAU gate, 활성 기간, 빈도 제한과 render 가능 여부를 모두 통과해야 표시됩니다.
+
+Journey custom event는 callback 없는 fire-and-forget API입니다.
+
+```swift
+AppBox.trackJourneyEvent("product_view")
+```
+
+예약 event key와 서버 `watch` 정책은 [서비스 앱 통합 가이드](https://github.com/MobilePartnersCo/AppBoxSDKFramwork/blob/main/docs/Service-App-Integration-Guide.md)를 따릅니다.
+
+### 5) AppsFlyer 딥링크 선택 연동
+
+AppsFlyer URI Scheme 딥링크는 `AppBoxAppsFlyerConfig`를 `AppBoxInitConfig`에 포함해 설정합니다. 서비스 앱은 AppsFlyer SDK 타입을 직접 import하지 않습니다. Native는 현재 AppBox WebView에 `window.AppboxSDK.deepLink.onReceive(payload)`를 호출합니다.
+
+```swift
+let appsFlyer = AppBoxAppsFlyerConfig(
   devKey: "YOUR_APPSFLYER_DEV_KEY",
   appleAppID: "YOUR_NUMERIC_APP_STORE_ID"
 )
-AppBox.shared.configureAppsFlyerJavaScriptBridge()
-AppBox.shared.startAppsFlyer()
+let config = AppBoxInitConfig(
+  common: AppBoxCommonConfig(projectId: "YOUR_PROJECT_ID"),
+  webView: AppBoxWebViewInitConfig(baseURL: "https://www.example.com"),
+  push: AppBoxPushInitConfig(),
+  appsFlyer: appsFlyer
+)
+AppBox.initialize(config) { result in
+  guard result.appsFlyer.status == .INITIALIZED else { return }
+  AppBox.configureAppsFlyerJavaScriptBridge(
+    AppBoxAppsFlyerJavaScriptBridgeConfig()
+  )
+  AppBox.startAppsFlyer()
+}
 ```
 
 웹앱은 v3.js가 제공하는 handler 등록 방식으로 payload를 사용합니다. JS payload에는 `rawParams`가 포함되지 않으며, top-level 값은 `deep_link_value`, sub parameter 객체명은 `subParam`입니다.
@@ -674,12 +990,12 @@ AppsFlyer URI Scheme 딥링크 URL은 `{scheme}://open` 형태로 설정합니�
 
 ```swift
 func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-  _ = AppBox.shared.handleUserActivity(userActivity)
+  _ = AppBox.handleUserActivity(userActivity)
 }
 
 func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
   guard let context = URLContexts.first else { return }
-  _ = AppBox.shared.handleURL(context.url, options: appOpenOptions(from: context))
+  _ = AppBox.handleURL(context.url, options: appOpenOptions(from: context))
 }
 
 private func appOpenOptions(from context: UIOpenURLContext) -> [UIApplication.OpenURLOptionsKey: Any] {
@@ -695,12 +1011,11 @@ private func appOpenOptions(from context: UIOpenURLContext) -> [UIApplication.Op
 }
 ```
 
-### 5) 추가 기능 설정
+### 6) 추가 기능 설정
 
 ```swift
-AppBox.shared.setDebug(debugMode: true)
-AppBox.shared.setPullDownRefresh(used: true)
-AppBox.shared.preloadWebView()
+AppBox.setPullDownRefresh(true)
+AppBox.preloadWebView(completion: nil)
 ```
 
 인트로 설정(선택):
@@ -713,8 +1028,37 @@ if let introItem1 = AppBoxIntroItems(imageUrl: "https://example.com/image.jpg") 
     fontColor: "#000000",
     item: [introItem1]
   )
-  AppBox.shared.setIntro(intro)
+  AppBox.setIntro(intro)
 }
+```
+
+### 7) Objective-C Facade 사용
+
+Objective-C 앱도 초기화는 AppDelegate에서 한 번만 수행하고 화면에서는 `AppBox` class method를 사용합니다.
+
+```objc
+AppBoxCommonConfig *common = [[AppBoxCommonConfig alloc]
+    initWithProjectId:@"YOUR_PROJECT_ID"
+    debugMode:YES];
+AppBoxWebViewInitConfig *webView = [[AppBoxWebViewInitConfig alloc]
+    initWithBaseURL:@"https://www.example.com"
+    webConfig:[AppBoxWebConfig new]];
+AppBoxInitConfig *config = [[AppBoxInitConfig alloc]
+    initWithCommon:common
+    webView:webView
+    push:[AppBoxPushInitConfig new]
+    inApp:[AppBoxInAppInitConfig new]
+    auth:nil
+    appsFlyer:nil
+    initializationTimeout:30];
+
+[AppBox initializeWithConfig:config completion:^(AppBoxInitResult *result) {
+    // 초기화 결과 처리
+}];
+
+[AppBox startFrom:self completion:^(BOOL success, NSError *error) {
+    // 화면 실행 결과 처리
+}];
 ```
 
 ---
@@ -728,7 +1072,7 @@ if let introItem1 = AppBoxIntroItems(imageUrl: "https://example.com/image.jpg") 
 |---|---|---|
 | 푸시만 사용 | 사용 안 함 | `AppBoxPushSDK`의 네이티브 API만 연동합니다. |
 | AppBox 기본 WebView 사용 | 사용 | `AppBoxSDK`가 관리하는 WebView에서 AppBox 브릿지 액션을 사용할 수 있습니다. |
-| 고객사 자체 WKWebView 사용 | 제한 사용 | `attach(webView:)` 이후 지원되는 브릿지 액션만 사용할 수 있습니다. |
+| 고객사 자체 WKWebView 사용 | 제한 사용 | `AppBox.attachWebView(...)` 이후 지원되는 브릿지 액션만 사용할 수 있습니다. |
 
 주요 브릿지 액션 예시는 릴리즈 노트와 기능 요약에 포함되어 있습니다.
 상세 request/response 스키마는 고객사 연동 범위에 따라 별도 제공됩니다.
@@ -745,8 +1089,8 @@ if let introItem1 = AppBoxIntroItems(imageUrl: "https://example.com/image.jpg") 
 
 ## 주의 사항
 
-1. AppBox 기본 WebView 방식은 `AppBox.shared.initSDK(...)` 이후에 `start`, `preload`, bridge 기반 기능을 호출합니다.
-2. Push-only 방식은 `AppBox.shared.initSDK(...)`를 호출하지 않고 `AppBoxPush.shared.initSDK(projectId:...)`만 사용합니다.
+1. AppBox 기본 WebView 방식은 `AppBox.initialize(...)` 완료 결과를 확인한 뒤 `start`, `preload`, bridge 기반 기능을 호출합니다.
+2. Push-only 방식은 `AppBox.initialize(...)`를 호출하지 않고 `AppBoxPush.shared.initSDK(projectId:...)`만 사용합니다.
 3. 고객사 자체 `WKWebView` attach 방식은 지원 action 범위가 제한됩니다.
 
 ---
