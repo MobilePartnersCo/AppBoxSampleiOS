@@ -20,6 +20,18 @@
 		9BB25BFE2FB54FB000D59AFE /* AppBoxSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BFD2FB54FB000D59AFE /* AppBoxSDK */; };
 		9BB25C002FB54FB000D59AFE /* AppBoxSnsLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25BFF2FB54FB000D59AFE /* AppBoxSnsLoginSDK */; };
 		9BB25C042FB54FC400D59AFE /* AppBoxPushSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB25C032FB54FC400D59AFE /* AppBoxPushSDK */; };
+		A10000000000000000000001 /* SampleConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* SampleConfiguration.swift */; };
+		A10000000000000000000002 /* SampleStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* SampleStateStore.swift */; };
+		A10000000000000000000003 /* SampleUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* SampleUIFactory.swift */; };
+		A10000000000000000000004 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* StatusViewController.swift */; };
+		A10000000000000000000005 /* WebViewSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* WebViewSampleViewController.swift */; };
+		A10000000000000000000006 /* PushSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* PushSampleViewController.swift */; };
+		A10000000000000000000007 /* InAppSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* InAppSampleViewController.swift */; };
+		A10000000000000000000008 /* HealthSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* HealthSampleViewController.swift */; };
+		A10000000000000000000009 /* AuthSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* AuthSampleViewController.swift */; };
+		A1000000000000000000000A /* JourneySampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* JourneySampleViewController.swift */; };
+		A1000000000000000000000B /* AttributionStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* AttributionStatusViewController.swift */; };
+		A1000000000000000000000C /* LogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* LogsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +71,18 @@
 		9BA76DB42CF593BE00FE2892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9BA76DB62CF593BE00FE2892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BA76DC02CF59AFA00FE2892 /* sdkSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sdkSample.entitlements; sourceTree = "<group>"; };
+		A20000000000000000000001 /* SampleConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration/SampleConfiguration.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* SampleStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SampleStateStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* SampleUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SampleUIFactory.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Status/StatusViewController.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* WebViewSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/WebView/WebViewSampleViewController.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* PushSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Push/PushSampleViewController.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* InAppSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/InApp/InAppSampleViewController.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* HealthSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Health/HealthSampleViewController.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* AuthSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Auth/AuthSampleViewController.swift; sourceTree = "<group>"; };
+		A2000000000000000000000A /* JourneySampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Journey/JourneySampleViewController.swift; sourceTree = "<group>"; };
+		A2000000000000000000000B /* AttributionStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Attribution/AttributionStatusViewController.swift; sourceTree = "<group>"; };
+		A2000000000000000000000C /* LogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Logs/LogsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -133,6 +157,18 @@
 				9BA76DAC2CF593BD00FE2892 /* ViewController.swift */,
 				9B9A0B812CFED64D0047B31F /* ObjcViewController.h */,
 				9B9A0B822CFED64D0047B31F /* ObjcViewController.m */,
+				A20000000000000000000001 /* SampleConfiguration.swift */,
+				A20000000000000000000002 /* SampleStateStore.swift */,
+				A20000000000000000000003 /* SampleUIFactory.swift */,
+				A20000000000000000000004 /* StatusViewController.swift */,
+				A20000000000000000000005 /* WebViewSampleViewController.swift */,
+				A20000000000000000000006 /* PushSampleViewController.swift */,
+				A20000000000000000000007 /* InAppSampleViewController.swift */,
+				A20000000000000000000008 /* HealthSampleViewController.swift */,
+				A20000000000000000000009 /* AuthSampleViewController.swift */,
+				A2000000000000000000000A /* JourneySampleViewController.swift */,
+				A2000000000000000000000B /* AttributionStatusViewController.swift */,
+				A2000000000000000000000C /* LogsViewController.swift */,
 				9BA76DAE2CF593BD00FE2892 /* Main.storyboard */,
 				9BA76DB12CF593BE00FE2892 /* Assets.xcassets */,
 				9BA76DB32CF593BE00FE2892 /* LaunchScreen.storyboard */,
@@ -265,6 +301,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000001 /* SampleConfiguration.swift in Sources */,
+				A10000000000000000000002 /* SampleStateStore.swift in Sources */,
+				A10000000000000000000003 /* SampleUIFactory.swift in Sources */,
+				A10000000000000000000004 /* StatusViewController.swift in Sources */,
+				A10000000000000000000005 /* WebViewSampleViewController.swift in Sources */,
+				A10000000000000000000006 /* PushSampleViewController.swift in Sources */,
+				A10000000000000000000007 /* InAppSampleViewController.swift in Sources */,
+				A10000000000000000000008 /* HealthSampleViewController.swift in Sources */,
+				A10000000000000000000009 /* AuthSampleViewController.swift in Sources */,
+				A1000000000000000000000A /* JourneySampleViewController.swift in Sources */,
+				A1000000000000000000000B /* AttributionStatusViewController.swift in Sources */,
+				A1000000000000000000000C /* LogsViewController.swift in Sources */,
 				9B9A0B832CFED64D0047B31F /* ObjcViewController.m in Sources */,
 				9BA76DAD2CF593BD00FE2892 /* ViewController.swift in Sources */,
 				9BA76DA92CF593BD00FE2892 /* AppDelegate.swift in Sources */,
@@ -586,7 +634,7 @@
 			repositoryURL = "https://github.com/MobilePartnersCo/AppBoxSDKFramwork";
 			requirement = {
 				kind = exactVersion;
-				version = 1.2.20;
+				version = 1.2.32;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

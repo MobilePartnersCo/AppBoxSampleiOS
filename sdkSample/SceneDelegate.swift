@@ -1,75 +1,142 @@
-//
-//  SceneDelegate.swift
-//  sdkSample
-//
-//  Created by mobilePartners on 11/26/24.
-//
-
 import UIKit
 import AppBoxSDK
 
 @MainActor
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    private enum PendingRoute {
+        case url(
+            URL,
+            [UIApplication.OpenURLOptionsKey: Any],
+            kind: String
+        )
+        case userActivity(NSUserActivity, kind: String)
+    }
 
     var window: UIWindow?
+    private var pendingRoutes: [PendingRoute] = []
 
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard scene is UIWindowScene else { return }
 
-        // [공통] 앱이 종료된 상태에서 열린 Universal Link/URL scheme도 SDK에 전달합니다.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(drainPendingRoutesIfReady),
+            name: .sampleStateDidChange,
+            object: nil
+        )
+
         for userActivity in connectionOptions.userActivities {
-            _ = AppBox.handleUserActivity(userActivity)
+            route(userActivity: userActivity, kind: "Cold Start Universal Link")
         }
 
         for urlContext in connectionOptions.urlContexts {
-            _ = AppBox.handleURL(
-                urlContext.url,
-                options: appOpenOptions(from: urlContext.options)
-            )
+            route(urlContext: urlContext, kind: "Cold Start URL Scheme")
         }
     }
 
-    func sceneDidDisconnect(_ scene: UIScene) {
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    func sceneDidBecomeActive(_ scene: UIScene) {
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-    }
-
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        guard let urlContext = URLContexts.first else { return }
-
-        // [공통] Scene 기반 앱에서는 URL scheme callback이 AppDelegate 대신 이 메서드로 들어올 수 있습니다.
-        _ = AppBox.handleURL(
-            urlContext.url,
-            options: appOpenOptions(from: urlContext.options)
-        )
+    func scene(
+        _ scene: UIScene,
+        openURLContexts URLContexts: Set<UIOpenURLContext>
+    ) {
+        for urlContext in URLContexts {
+            route(urlContext: urlContext, kind: "URL Scheme")
+        }
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        // [공통] 필요한 UserActivity를 AppBox 처리 경로로 전달합니다.
-        _ = AppBox.handleUserActivity(userActivity)
+        route(userActivity: userActivity, kind: "Universal Link")
     }
 
-    private func appOpenOptions(from options: UIScene.OpenURLOptions) -> [UIApplication.OpenURLOptionsKey: Any] {
+    private func route(urlContext: UIOpenURLContext, kind: String) {
+        route(
+            url: urlContext.url,
+            options: appOpenOptions(from: urlContext.options),
+            kind: kind
+        )
+    }
+
+    private func route(
+        url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any],
+        kind: String
+    ) {
+        guard SampleConfiguration.canInitializeSDK else {
+            SampleStateStore.shared.recordDeepLink(kind: kind, handled: false)
+            return
+        }
+
+        guard SampleStateStore.shared.initializationCompleted else {
+            pendingRoutes.append(.url(url, options, kind: kind))
+            return
+        }
+
+        deliver(url: url, options: options, kind: kind)
+    }
+
+    private func route(userActivity: NSUserActivity, kind: String) {
+        guard SampleConfiguration.canInitializeSDK else {
+            SampleStateStore.shared.recordDeepLink(kind: kind, handled: false)
+            return
+        }
+
+        guard SampleStateStore.shared.initializationCompleted else {
+            pendingRoutes.append(.userActivity(userActivity, kind: kind))
+            return
+        }
+
+        deliver(userActivity: userActivity, kind: kind)
+    }
+
+    @objc private func drainPendingRoutesIfReady() {
+        guard SampleConfiguration.canInitializeSDK,
+              SampleStateStore.shared.initializationCompleted,
+              !pendingRoutes.isEmpty else {
+            return
+        }
+
+        let routes = pendingRoutes
+        pendingRoutes.removeAll()
+
+        for route in routes {
+            switch route {
+            case let .url(url, options, kind):
+                deliver(url: url, options: options, kind: kind)
+            case let .userActivity(userActivity, kind):
+                deliver(userActivity: userActivity, kind: kind)
+            }
+        }
+    }
+
+    private func deliver(
+        url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any],
+        kind: String
+    ) {
+        let handled = AppBox.handleURL(url, options: options)
+        SampleStateStore.shared.recordDeepLink(kind: kind, handled: handled)
+    }
+
+    private func deliver(userActivity: NSUserActivity, kind: String) {
+        let handled = AppBox.handleUserActivity(userActivity)
+        SampleStateStore.shared.recordDeepLink(kind: kind, handled: handled)
+    }
+
+    private func appOpenOptions(
+        from options: UIScene.OpenURLOptions
+    ) -> [UIApplication.OpenURLOptionsKey: Any] {
         var result: [UIApplication.OpenURLOptionsKey: Any] = [:]
 
         if let sourceApplication = options.sourceApplication {
             result[.sourceApplication] = sourceApplication
         }
-
         result[.annotation] = options.annotation
         result[.openInPlace] = options.openInPlace
         return result

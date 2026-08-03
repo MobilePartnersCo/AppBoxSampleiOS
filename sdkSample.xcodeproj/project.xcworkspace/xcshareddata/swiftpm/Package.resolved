@@ -1,5 +1,5 @@
 {
-  "originHash" : "f98c441a1c08ef8710261e22075fd8d69e5484d6ea8f380177effc3657dd874c",
+  "originHash" : "f86ffd81e17628d3ec7c10f605ef1067952559276c6a19e2590a96cd8a75ec15",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MobilePartnersCo/AppBoxSDKFramwork",
       "state" : {
-        "revision" : "25c241766f03c8b0983ff4af73880d6f90725b45",
-        "version" : "1.2.20"
+        "revision" : "0f83b3d12d0ba4cef7cb40782109ec49baa04d46",
+        "version" : "1.2.32"
       }
     },
     {
